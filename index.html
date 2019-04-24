@@ -10,7 +10,12 @@
     content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="./assets/vue.css">
   <link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
-
+  <style>
+    footer.neyio-footer {
+      text-align: right;
+      opacity: 0.3;
+    }
+  </style>
 </head>
 
 <body>
@@ -27,6 +32,15 @@
       // 完整配置参数
       search: 'auto', // 默认值
       auto2top: true, //Scrolls to the top of the screen when the route is changed.
+      plugins: [
+        (hook) => {
+          const footer = [
+            '<hr/>',
+            '<footer class="neyio-footer"><span>Neyio Markdowned Website With <a href="https://github.com/docsifyjs/docsify" target="_blank">Docsify</a>.</span></footer>'
+          ].join('');
+          hook.afterEach((html) => html + footer);
+        }
+      ]
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
