@@ -19,12 +19,15 @@
     window.$docsify = {
       name: '静, 以致远',
       repo: 'https://github.com/neyio/neyio.github.io',
-      coverpage: true, //封面 设置 _coverpage.md ,coverpage: ['/', '/zh-cn/']用于配置多个语言封面
-      loadSidebar: true, //修改每个文件夹下的 _sidebar.md
+      coverpage: 'config/cover.md', //封面 设置 _coverpage.md ,coverpage: ['/', '/zh-cn/']用于配置多个语言封面
+      loadSidebar: 'config/sidebar.md', //修改每个文件夹下的 _sidebar.md
+      loadNavbar: 'config/navbar.md',
+      homepage: 'MAIN.md',
       subMaxLevel: 3, //侧边栏最大显示深度
       loadNavbar: true, //loadNavbar方式二 设置每个文件夹下的 _navbar.md
       // 完整配置参数
       search: 'auto', // 默认值
+      auto2top: true, //Scrolls to the top of the screen when the route is changed.
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>

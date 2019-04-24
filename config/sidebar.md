@@ -1,4 +1,4 @@
-* [ 主页 ](/main.md)
+* [ 主页 ](/MAIN.md)
 * [ 概述 ](/SUMMARY.md)
 * [ 部署 ](deploy/index.md)
 * [ Docker ](deploy/docker.md)

@@ -7,6 +7,6 @@
 - 纸上得来终觉浅，绝知此事要躬行。
 
 [GitHub](https://github.com/neyio/neyio.github.io/)
-[Get Started](/main.md)
+[Get Started](/MAIN.md)
 
 ![color](#f8f8f8)
