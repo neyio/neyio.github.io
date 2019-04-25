@@ -1,0 +1,14 @@
+.markdown-section {
+    margin: 0 auto;
+    max-width: 900px;
+    padding: 30px 15px 20px;
+    position: relative
+}
+
+.markdown-section ol,
+.markdown-section p,
+.markdown-section ul {
+    line-height: 1.8rem;
+    word-spacing: .05rem;
+    font-size: 1rem;
+}
