@@ -40,7 +40,7 @@ docker run --rm -d -e PASSWORD="neo" --name egg-redis-server -p 6379:63790 -v $P
 
 4. 把上述三者的配置结合起来，使其相互能够访问。
 ?> 即将被废弃：关于link的理解 ：[关于对docker run —link的理解 - 简书](https://www.jianshu.com/p/21d66ca6115e) 阮老师在文章中用 “跟上一次相比，上面的命令多了一个参数 —link wordpressdb:mysql，表示 WordPress 容器要连到wordpressdb容器，冒号表示该容器的别名是mysql。”一笔带过了。
-其实可以这么理解，将两者的 放在同一个组内，该组内的服务的环境变量相通，并使得内网端口可以访问，也就是`mysql-server`的`3306`端口可以直接访问了，为了证明这一点，我们在`egg-js`中引入`mysql`,并在
+其实可以这么理解，将两者的 放在同一个“父子”组内，该组内的服务的环境子对父透明，并使得父对子的内网端口可以直接访问，也就是`mysql-server`的`3306`端口可以在`egg`中直接访问了，为了证明这一点，我们在`egg-js`中引入`mysql`,并在
 ```bash
 --link egg-mysql-server:egg-mysql-server  # 此处 第一个为一个正在运行的docker服务的name属性，可以通过docker ps 看到，第二个 alias是别名，在当前启动的容器内部，可以通过env查看到的 别名_+后缀的环境变量（被link的服务的全部环境变量）
 ```
