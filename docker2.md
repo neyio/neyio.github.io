@@ -11,7 +11,7 @@
 
 在上一篇文中，我们使用了容器进行构建一个`egg.js`应用，如果亲爱的你跑完了上面的代码，你会发现，构建是及其友好的，并且**轻巧，快捷，易封装发布**。而正是这些便利性以及软件工程中的问题，促使我们去尝试用容器解决这一**偏架构**的问题。我们可以尝试 **像运输集装箱一样**，把不同的集装箱放在一架货轮上扬帆起航，充分利用它的载货能力，当一个集装箱不够用的时候，再开一个；当一个货轮不够用的时候，再起一个，这跟微服务架构异曲同工，使用容器的时候了解微服务架构相得益彰。
 
-![](docker2/bg2018021303.png)
+![](docker2/bg2018021303%202.png)
 
 ## 我们接下来通过构建一个相对完整的Egg.js（含Redis 和 Mysql）来进一步学习如何链接各个微服务{docsify-ignore}
 
@@ -110,7 +110,7 @@ return {...config,...userConfig};
 ```
 
 访问 `http://127.0.0.1:7001` 应该可以看到输出结果如下：
-![](docker2/383B5FC7-EE18-4E70-BFAC-FF6C65AE932B.png)
+![](docker2/383B5FC7-EE18-4E70-BFAC-FF6C65AE932B%202.png)
 
 至此Mysql互通完成,接下来简述Redis的相关操作.
 先关闭`egg-full-demo`容器(`docker kill <hash>`)。在`egg-full-demo`项目中引入`egg-redis`,修改`plugins`文件，增加
@@ -166,12 +166,39 @@ async index(){
 至此，EGG+MYSQL+REDIS 项目搭建完毕，内心一万点暴击。一直在切换容器，调整数据，修改配置。
 
 
+### 使用Docker-compose构建服务
 
+!> 所以程序员发明了一个名为`docker-compose`，就是用来解决上述复杂的配置问题的。
 
+上述配置可以修改为下方的配置表，干净整洁，我们只需要输入命令 `docker-compose up`即可搭建刚才的环境。
+> 常规使用可以参考 [Docker之Compose服务编排 - 飞鸿影~ - 博客园](https://www.cnblogs.com/52fhy/p/5991344.html)  
+ 
+```yaml
+egg-full-demo:
+  image: egg-full-demo
+  links:
+    - mysql:egg-mysql-server
+    - redis:egg-redis-server
+  ports:
+    - "7001:7001"
+  volumes:
+    - ./volume:/app/volume
+mysql:
+  image: mysql:5.7
+  container_name: egg-mysql-server
+  environment:
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_DATABASE=neo
+redis:
+  image: redis:3.2
+  container_name: egg-redis-server
+  environment:
+    - PASSWORD=neo
+  volumes:
+    - ./redis:/data
+```
 
-
-
-### 安装整合辅助工具
+### 安装Docker-compose
 > 参见地址 [Install Docker Compose | Docker Documentation](https://docs.docker.com/compose/install/#install-compose)   
 
 1. 下载文件
@@ -181,8 +208,6 @@ sudo curl -L “https://github.com/docker/compose/releases/download/1.24.0/docke
 2. `sudo chmod +x /usr/local/bin/docker-compose` 给予权限
 3. `sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose` 置入`bin`中方便直接调用,`-s`是软链接的意思。
 4. `docker-compose —version`查看版本号
-
-
 
 
 ## 附录

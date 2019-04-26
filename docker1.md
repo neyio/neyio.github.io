@@ -23,19 +23,19 @@ Docker客户端用于使用远程API来管理和创建Docker容器。
 >  `library/hello-world` 中的 `library`指的是 命名空间，若不填写，则默认为library（它是一个docker官方空间）。`latest`可以理解为标签（类似版本识别号）。  
 运行结果如下：
 
-![](docker1/C40C6ED2-C90C-487B-89CE-2A9C735B8586.png)
+![](docker1/C40C6ED2-C90C-487B-89CE-2A9C735B8586%202.png)
 
 
 2. 实例化镜像 `docker container run hello-world`
 运行结果：
 
-![](docker1/64B3BEAA-F508-4F81-8694-9A840A48CC73.png)
+![](docker1/64B3BEAA-F508-4F81-8694-9A840A48CC73%202.png)
 
 > docker container run命令会从 image 文件，生成一个正在运行的容器实例。注意，docker container run命令具有自动抓取 image 文件的功能。如果发现本地没有指定的 image 文件，就会从仓库自动抓取。因此，前面的docker image pull命令并不是必需的步骤。  
 
 示例如下：
 
-![](docker1/7973E7A1-2E2B-4536-AD38-C2581E5F1406.png)
+![](docker1/7973E7A1-2E2B-4536-AD38-C2581E5F1406%202.png)
 
 3. 杀死容器，上述`hello-world`镜像容器一旦执行完毕，自行了断了。但是有些容器例如 Mysql,Redis等并不会自动终结，确切说用户也不希望他自动终结。但是这些服务如果需要终结，那么在客户端执行：
 
@@ -105,7 +105,7 @@ COPY . /app
 WORKDIR /app
 RUN npm install --registry=https://registry.npm.taobao.org
 EXPOSE 7001
-CMD [ "npm run start" ]
+CMD npm run start
 ```
 
 ### 2.构建镜像
@@ -175,12 +175,12 @@ docker rm --help
 
 ```bash
 docker build -t image-name . # 使用此目录的 Dockerfile 创建镜像 ， 形成的镜像可以在 使用 docker images 找到
-docker run -p 4000:80 image-name  # 运行镜像 ，将容器内的端口80“镜像名称”映射到宿主4000端口 ，使用CMD+C直接能退出
+docker run -p 4000:80 image-name  # 运行镜像 ，将容器内的端口80“镜像名称”映射到宿主4000端口 ，使用CMD+C直接能退出 ,等同 docker container run 
 docker run -d -p 4000:80 image-name  # 运行镜像内容相同 ，但是程序在后台运行
 docker ps  # 查看所有正在运行的容器的列表
-docker stop <hash> # 平稳地停止指定的容器
+docker stop <hash> # 平稳地停止指定的容器 等同于 docker container stop ，相当于向容器里面的主进程发出 SIGTERM 信号，然后过一段时间再发出 SIGKILL 信号。
 docker ps -a # 查看所有容器的列表，甚至包含未运行的容器
-docker kill <hash>  # 强制关闭指定的容器
+docker kill <hash>  # 强制关闭指定的容器 ，不同于 docker container stop 这个是强制一刀切。直接 SIGKILL
 docker rm <hash>  # 从此机器中删除指定的容器
 docker rm $(docker ps -a -q)  # 从此机器中删除所有容器
 docker images -a  # 显示此机器上的所有镜像
@@ -191,6 +191,9 @@ docker tag <image> username/repository:tag 	 # 标记 <image> 以上传到镜像
 #例如 docker tag friendlyhello neyio/get-started:part1
 docker push username/repository:tag # 将已标记的镜像上传到镜像库
 docker run username/repository:tag  # 运行镜像库中的镜像
+docker container start # docker container run命令是新建容器，每运行一次，就会新建一个容器。同样的命令运行两次，就会生成两个一模一样的容器文件。如果希望重复使用容器，就要使用docker container start命令，它用来启动已经生成、已经停止运行的容器文件。
+docker container cp <hash>:[/path/to/file] .  #将内部的文件拷贝到容器外部的路径上
+
 ```
 
 
@@ -217,7 +220,7 @@ docker run hello-world
 
 
 
-## 附录
+## 附录 及「 划重点 」
 1. 如本文项目本身是简单一个js文件,例子如下，则本阶段无需进行 `RUN`命令的相关配置。
 ```javascript
 function sayHello(){
@@ -229,6 +232,8 @@ sayHello();
 2. 本文容易遗漏的点罗列：
 * 终止运行的容器文件，依然会占据硬盘空间，可以使用`docker container rm [CONTAINER ID]`命令删除。
 * 在`docker container run xxx /bin/bash`时`dockerfile`指定的CMD命令会被覆盖。
-
+* 在实际运行中docker container 可能需要保持运行，在docker容器内部的shell中执行`CTRL+P+Q`的形式用以退出控制台而不影响容器运行。
 ?> docker的周期依赖前台有一个持续执行的进程，如果执行 `docker run` 或者 `dockerfile`中的`CMD`命令后，`CMD`返回了`exit`,随即`docker`容器也被杀死。可以通过`CMD`执行一个死循环的`.sh`文件来保持进程。
-
+* `docker container logs [containerID]` 用于查看内部容器的`shell log`输出。
+* ` docker container cp <hash>:[/path/to/file] .  #将内部的文件拷贝到容器外部的路径上`
+* 本文中尚未提到的一点就是目录挂载，详见下一章节。
