@@ -11,7 +11,7 @@
 
 在上一篇文中，我们使用了容器进行构建一个`egg.js`应用，如果亲爱的你跑完了上面的代码，你会发现，构建是及其友好的，并且**轻巧，快捷，易封装发布**。而正是这些便利性以及软件工程中的问题，促使我们去尝试用容器解决这一**偏架构**的问题。我们可以尝试 **像运输集装箱一样**，把不同的集装箱放在一架货轮上扬帆起航，充分利用它的载货能力，当一个集装箱不够用的时候，再开一个；当一个货轮不够用的时候，再起一个，这跟微服务架构异曲同工，使用容器的时候了解微服务架构相得益彰。
 
-![](docker2/bg2018021303%202.png)
+![](docker2/bg2018021303.png)
 
 ## 我们接下来通过构建一个相对完整的Egg.js（含Redis 和 Mysql）来进一步学习如何链接各个微服务{docsify-ignore}
 
@@ -21,8 +21,8 @@
 ?> 本段落以了解流程为主，后续docker已经不推荐 —link 方式进行构建。
 1. 根据上一篇文章创建一个类似 [https://github.com/neyio/docker-fullegg-demo](https://github.com/neyio/docker-fullegg-demo) 的项目结构，用于启动`egg.js`服务。(此处略微不同的是使用了 `docker run -v`<sup>1</sup>) 。启动`docker run -p 7001:7001 -it -d -v $PWD/volume:/app/volume  egg-full-demo`服务。
 2. 创建一个mysql服务并传入账户密码和数据名称。  
-?> 延伸阅读[MySQL 到底能不能放到 Docker 里跑？ - 阅读 - 掘金](https://juejin.im/entry/5a03c2f25188253d681706f4)
-下载镜像`docker image pull mysql:5.7`,使用MYSQL镜像创建容器`docker run -e  MYSQL_ROOT_PASSWORD=root --env MYSQL_DATABASE=neo -p 33060:3306  -it --name=egg-mysql-server  mysql:5.7 ` 
+?>  延伸阅读[MySQL 到底能不能放到 Docker 里跑？ - 阅读 - 掘金](https://juejin.im/entry/5a03c2f25188253d681706f4)
+下载镜像`docker image pull mysql:5.7`,使用MYSQL镜像创建容器`docker run -e  MYSQL_ROOT_PASSWORD=root --env MYSQL_DATABASE=neo -p 3306:33060  -it --name=egg-mysql-server  mysql:5.7 ` 
 `-e`用于指定MYSQL容器所需的环境变量  `MYSQL_ROOT_PASSWORD`表示`root`的密码，`MYSQL_DATABASE`新建名为`neo`的db。
 使用下方代码尝试登陆下：
 ```bash
@@ -44,8 +44,8 @@ docker run --rm -d -e PASSWORD="neo" --name egg-redis-server -p 6379:63790 -v $P
 ```bash
 --link egg-mysql-server:egg-mysql-server  # 此处 第一个为一个正在运行的docker服务的name属性，可以通过docker ps 看到，第二个 alias是别名，在当前启动的容器内部，可以通过env查看到的 别名_+后缀的环境变量（被link的服务的全部环境变量）
 ```
-进入容器内部输入`env`查看当前环境的变量。如下图所示：
 
+进入容器内部输入`env`查看当前环境的变量。如下图所示：
 ```bash
 EGG_REDIS_SERVER_ENV_REDIS_VERSION=3.2.12
 YARN_VERSION=1.15.2
@@ -70,8 +70,10 @@ NODE_VERSION=11.14.0
 ...
 ```
 
-!>如何使用环境变量,参见下方附录<sup>3</sup>。
-!>实际上，这也太坑了一点，在你不知道`mysql`容器中的ENV默认的变量的时候，你必须要进去容器瞅一眼,在容器内部中跑下`env`,然后 再根据 我们的命名如 `egg-mysql-server`推断成`EGG_MYSQL_SERVER`至于 `PORT_3306_TCP_ADDR`你一般是记不住的，所以老老实实进去里面找到变量，再逆向出来去`egg`的配置文件中写进去，如果每次命名`alias`不一样，那就GG
+如何使用环境变量,参见下方附录<sup>3</sup>。
+
+!>  实际上，这也太坑了一点，在你不知道`mysql`容器中的ENV默认的变量的时候，你必须要进去容器瞅一眼,在容器内部中跑下`env`,然后 再根据 我们的命名如 `egg-mysql-server`推断成`EGG_MYSQL_SERVER`至于 `PORT_3306_TCP_ADDR`你一般是记不住的，所以老老实实进去里面找到变量，再逆向出来去`egg`的配置文件中写进去，如果每次命名`alias`不一样，那就GG。
+
 尝试修改 `egg-full-demo`中的`config/config.default.js`,添加如下代码
 ```javascript
 module.exports = appInfo => {
@@ -110,7 +112,7 @@ return {...config,...userConfig};
 ```
 
 访问 `http://127.0.0.1:7001` 应该可以看到输出结果如下：
-![](docker2/383B5FC7-EE18-4E70-BFAC-FF6C65AE932B%202.png)
+![](docker2/383B5FC7-EE18-4E70-BFAC-FF6C65AE932B.png)
 
 至此Mysql互通完成,接下来简述Redis的相关操作.
 先关闭`egg-full-demo`容器(`docker kill <hash>`)。在`egg-full-demo`项目中引入`egg-redis`,修改`plugins`文件，增加
