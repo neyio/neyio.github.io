@@ -1,5 +1,4 @@
-* [ 主页 ](README.md)
-* [ 概述 ](summary.md)
+* [ 自序 ](README.md)
 
 - 部署
   - [ 概述 ](summary.md)
