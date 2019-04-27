@@ -1,7 +1,7 @@
 
 # Neo's 小站 
 
-![](_media/windrunner.jpg  ':size=300*300')
+![](/assets/images/sun.png  ':size=300*300')
 
 ## 冬夜读书示子聿 
 「 宋 - 陆游 」
