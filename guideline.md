@@ -121,3 +121,79 @@
 `SELECT CHARACTER_LENGTH("轻松工作");` 返回为`4` 如果需要存储表情，那么选择 `utfmb4` 来进行存储，注意它与 `utf-8` 编码的区别。
 
 11. 【参考】`TRUNCATE TABLE 比 DELETE` 速度快，且使用的系统和事务日志资源少，但 `TRUNCATE` 无事务且不触发 `trigger`，有可能造成事故，故不建议在开发代码中使用此语句。 说明:`TRUNCATE TABLE` 在功能上与不带 `WHERE` 子句的 `DELETE` 语句相同。
+
+
+## 编码规约
+
+### （一）命名风格
+
+1. 【强制】后台代码中的命名均不能以下划线开始，也不能以下划线或美元符号结束。 前端如遇到下划线开头，表示该变量为私有或该方法为私有方法。PHP变量不允许以美元符号直接接大写的方式定义。
+
+?> 反例:_name / __name / $Object / name_ / name$ / 
+
+2. 【强制】类名使用 `UpperCamelCase` 风格，必须遵从大驼峰形式，遇到特殊的大写名词除外，单词和单词间必须做区分，否则会导致阅读性差。
+正例:/ MessageException / AskForLeaveRequest
+反例: MSGException / AskforleaveRequest
+
+3. 【强制】方法名、参数名、成员变量、局部变量都统一使用 `lowerCamelCase` 风格，必须遵从驼峰形式。 
+
+?> 正例: localValue / getHttpMessage() / inputUserId 
+
+4. 【强制】常量命名全部大写，单词间用下划线隔开，力求语义表达完整清楚，不要嫌名字长。 
+?>正例:MAX_STOCK_COUNT 反例:MAX_COUNT 
+
+5. 【强制】PHP抽象类以`Contract`结尾；PHP服务使用`Service`结尾；异常类命名使用 `Exception` 结尾;测试类 命名以它要测试的类的名称开始，以 Test 结尾；控制器必须以`Controller`结尾。
+
+6. 【强制】PHP数组直接使用` 变量 =  [ … ]` 定义
+
+7. 【强制】Node文件目录统一使用小写，点分隔符之间有且仅有一个自然语义的英语单词。类名统一使用 单数形式，但是类名如果有复数含义，类名可以使用复数形式。
+
+?> 正例: controller.attendance.xxxx
+   
+8.  【强制】切勿所有模块都放在同一目录下，增加代码查找的复杂度，不利于后期维护和拓展，如果模块需要升级或拓展的，建议命名文件夹名为`v1\v2\v3`。
+
+9.  【强制】杜绝完全不规范的缩写，避免望文不知义。
+
+?> 反例:AbstractClass“缩写”命名成 AbsClass;condition“缩写”命名为condi，此类随 意缩写严重降低了代码的可阅读性。 
+    
+10.  【推荐】为了达到代码自解释的目标，任何自定义编程元素在命名时，使用尽量完整的单词 组合来表达其意。
+    
+?> 正例: 从远程仓库拉取代码的类命名为 PullCodeFromRemoteRepository。反例: 变量 const a =0;const b = xxx; 的随意命名方式。 
+
+11.   【推荐】如果模块、接口、类、方法使用了设计模式，在命名时体现出具体模式。 说明:将设计模式体现在名字中，有利于阅读者快速理解架构设计理念。 
+
+?>正例:public class OrderFactory;public class LoginProxy;  public class ResourceObserver; 
+
+
+12.  【推荐】尽量不要在接口里定义变量，如果一定要定义变量，肯定是与接口方法相关，并且是整个应用的基础常量。
+   
+13. 【强制】PHP接口和实现类的命名有两套规则:
+
+    1. 【强制】对于 `Contract` 和 `Repository` 类，所有对外调用的接口，必须是在`Contract`中定义且实现的。
+    2. 【推荐】控制器中应避免出现服务代码实现的片段，控制器的方法尽可能只实现路由功能。
+
+14.  【强制】多状态出口的返回方法，必须以数组或枚举的方式定义返回的结果值，并在必要时加以注释中文含义。
+
+```javascript
+#例如：
+const outPutState = { 
+   success: 'ok' , 
+   failed: 'failure',
+   error: 'error'
+} 
+return { 
+   status: outPutState['success'],
+   ...
+}
+#反例： return { status: 'success' };
+```
+15. 【强制】服务层命名规范：使用对应方法前缀进行相关操作，后缀可以是By某Key用以区分同类型操作的不同入参。
+
+```list
+     1.  获取单个对象的方法用get做前缀。  例如： getUserById()
+     2.  获取多个对象的方法用list做前缀。 例如： listUsers()
+     3.  获取统计值的方法用count做前缀。 例如：countClassStudentsByClassId()
+     4.  插入的方法用insert做前缀。     例如： insertUser()
+     5.  删除的方法用delete做前缀。     例如： deleteUserById()
+     6.  修改的方法用update做前缀。     例如:  updateUserById()
+```
