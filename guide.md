@@ -1,10 +1,8 @@
-
 # Hello,World! Neyio's Docment.
 
 > Try one more time with patient.
 
 ## 拓展语法
-
 
 ### 强调
 
@@ -13,6 +11,7 @@
 ```
 
 ### 普通提示
+
 普通的提示信息，比如写 TODO 或者参考内容等。
 
 ```
@@ -46,7 +45,6 @@
   - [ ] bim
   - [ ] lim
 
-
 !> 一段重要的内容，可以和其他 **Markdown** 语法混用。
 
 ### 图片缩放
@@ -56,18 +54,16 @@
 ![logo](https://docsify.js.org/_media/icon.svg ':size=100')
 ```
 
-![logo](https://docsify.js.org/_media/icon.svg ':size=50x100')
-![logo](https://docsify.js.org/_media/icon.svg ':size=100')
+![logo](https://docsify.js.org/_media/icon.svg ":size=50x100")
+![logo](https://docsify.js.org/_media/icon.svg ":size=100")
 
-
-### 设置标题的id属性
+### 设置标题的 id 属性
 
 ```
 ### 你好，世界！ :id=hello-world
 ```
 
 ### 你好，世界! :id=hello-world
-
 
 > 和部署所有静态网站一样，只需将服务器的访问根目录设定为 index.html 文件。
 
@@ -100,3 +96,23 @@ Bonjour!
 Ciao!
 
 <!-- tabs:end -->
+
+代码如下：
+
+```markdown
+<!-- tabs:start -->
+
+#### ** English **
+
+Hello!
+
+#### ** French **
+
+Bonjour!
+
+#### ** Italian **
+
+Ciao!
+
+<!-- tabs:end -->
+```
