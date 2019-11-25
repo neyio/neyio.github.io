@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.23b67dd9.chunk.css",
-    "main.js": "/static/js/main.e67e86e7.chunk.js",
-    "main.js.map": "/static/js/main.e67e86e7.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.af8b4d78.js",
-    "runtime-main.js.map": "/static/js/runtime-main.af8b4d78.js.map",
-    "static/css/2.71c21cff.chunk.css": "/static/css/2.71c21cff.chunk.css",
-    "static/js/2.dd65c3b4.chunk.js": "/static/js/2.dd65c3b4.chunk.js",
-    "static/js/2.dd65c3b4.chunk.js.map": "/static/js/2.dd65c3b4.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.105414ed42b805f27a08df595900210a.js": "/precache-manifest.105414ed42b805f27a08df595900210a.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/2.71c21cff.chunk.css.map": "/static/css/2.71c21cff.chunk.css.map",
-    "static/css/main.23b67dd9.chunk.css.map": "/static/css/main.23b67dd9.chunk.css.map",
-    "static/media/katex.min.css": "/static/media/KaTeX_Typewriter-Regular.6cc31ea5.woff2"
+    "main.css": "./anylate/static/css/main.23b67dd9.chunk.css",
+    "main.js": "./anylate/static/js/main.fc2f335b.chunk.js",
+    "main.js.map": "./anylate/static/js/main.fc2f335b.chunk.js.map",
+    "runtime-main.js": "./anylate/static/js/runtime-main.22182199.js",
+    "runtime-main.js.map": "./anylate/static/js/runtime-main.22182199.js.map",
+    "static/css/2.f45b5b9f.chunk.css": "./anylate/static/css/2.f45b5b9f.chunk.css",
+    "static/js/2.dd596e14.chunk.js": "./anylate/static/js/2.dd596e14.chunk.js",
+    "static/js/2.dd596e14.chunk.js.map": "./anylate/static/js/2.dd596e14.chunk.js.map",
+    "index.html": "./anylate/index.html",
+    "precache-manifest.7cdb1b7b64584380ad6e84a1cc4bb02b.js": "./anylate/precache-manifest.7cdb1b7b64584380ad6e84a1cc4bb02b.js",
+    "service-worker.js": "./anylate/service-worker.js",
+    "static/css/2.f45b5b9f.chunk.css.map": "./anylate/static/css/2.f45b5b9f.chunk.css.map",
+    "static/css/main.23b67dd9.chunk.css.map": "./anylate/static/css/main.23b67dd9.chunk.css.map",
+    "static/media/katex.min.css": "./anylate/static/media/KaTeX_Typewriter-Regular.6cc31ea5.woff2"
   },
   "entrypoints": [
-    "static/js/runtime-main.af8b4d78.js",
-    "static/css/2.71c21cff.chunk.css",
-    "static/js/2.dd65c3b4.chunk.js",
+    "static/js/runtime-main.22182199.js",
+    "static/css/2.f45b5b9f.chunk.css",
+    "static/js/2.dd596e14.chunk.js",
     "static/css/main.23b67dd9.chunk.css",
-    "static/js/main.e67e86e7.chunk.js"
+    "static/js/main.fc2f335b.chunk.js"
   ]
 }
