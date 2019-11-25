@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/anylate/static/css/main.23b67dd9.chunk.css",
-    "main.js": "/anylate/static/js/main.309dddba.chunk.js",
-    "main.js.map": "/anylate/static/js/main.309dddba.chunk.js.map",
-    "runtime-main.js": "/anylate/static/js/runtime-main.7df6f404.js",
-    "runtime-main.js.map": "/anylate/static/js/runtime-main.7df6f404.js.map",
-    "static/css/2.2da3c62d.chunk.css": "/anylate/static/css/2.2da3c62d.chunk.css",
-    "static/js/2.e7a3fa47.chunk.js": "/anylate/static/js/2.e7a3fa47.chunk.js",
-    "static/js/2.e7a3fa47.chunk.js.map": "/anylate/static/js/2.e7a3fa47.chunk.js.map",
-    "index.html": "/anylate/index.html",
-    "precache-manifest.b5b8ba6e25f2a7237a19ed8587f1accb.js": "/anylate/precache-manifest.b5b8ba6e25f2a7237a19ed8587f1accb.js",
-    "service-worker.js": "/anylate/service-worker.js",
-    "static/css/2.2da3c62d.chunk.css.map": "/anylate/static/css/2.2da3c62d.chunk.css.map",
-    "static/css/main.23b67dd9.chunk.css.map": "/anylate/static/css/main.23b67dd9.chunk.css.map",
-    "static/media/katex.min.css": "/anylate/static/media/KaTeX_Typewriter-Regular.6cc31ea5.woff2"
+    "main.css": "//www.neyio.cn/anylate/static/css/main.23b67dd9.chunk.css",
+    "main.js": "//www.neyio.cn/anylate/static/js/main.0ec930aa.chunk.js",
+    "main.js.map": "//www.neyio.cn/anylate/static/js/main.0ec930aa.chunk.js.map",
+    "runtime-main.js": "//www.neyio.cn/anylate/static/js/runtime-main.78735ad6.js",
+    "runtime-main.js.map": "//www.neyio.cn/anylate/static/js/runtime-main.78735ad6.js.map",
+    "static/css/2.7f20a4d1.chunk.css": "//www.neyio.cn/anylate/static/css/2.7f20a4d1.chunk.css",
+    "static/js/2.f475313f.chunk.js": "//www.neyio.cn/anylate/static/js/2.f475313f.chunk.js",
+    "static/js/2.f475313f.chunk.js.map": "//www.neyio.cn/anylate/static/js/2.f475313f.chunk.js.map",
+    "index.html": "//www.neyio.cn/anylate/index.html",
+    "precache-manifest.add35cbb070977410df6625a9682ce14.js": "//www.neyio.cn/anylate/precache-manifest.add35cbb070977410df6625a9682ce14.js",
+    "service-worker.js": "//www.neyio.cn/anylate/service-worker.js",
+    "static/css/2.7f20a4d1.chunk.css.map": "//www.neyio.cn/anylate/static/css/2.7f20a4d1.chunk.css.map",
+    "static/css/main.23b67dd9.chunk.css.map": "//www.neyio.cn/anylate/static/css/main.23b67dd9.chunk.css.map",
+    "static/media/katex.min.css": "//www.neyio.cn/anylate/static/media/KaTeX_Typewriter-Regular.6cc31ea5.woff2"
   },
   "entrypoints": [
-    "static/js/runtime-main.7df6f404.js",
-    "static/css/2.2da3c62d.chunk.css",
-    "static/js/2.e7a3fa47.chunk.js",
+    "static/js/runtime-main.78735ad6.js",
+    "static/css/2.7f20a4d1.chunk.css",
+    "static/js/2.f475313f.chunk.js",
     "static/css/main.23b67dd9.chunk.css",
-    "static/js/main.309dddba.chunk.js"
+    "static/js/main.0ec930aa.chunk.js"
   ]
 }
