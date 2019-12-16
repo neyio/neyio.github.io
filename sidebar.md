@@ -3,7 +3,7 @@
 * 大前端程序员
   - [ 知识技能树 ](front-knowledge-tree.md)
 * JAVASCRIPT
-  - [ 基础核心 ](javascript-base.md)
+  - [ 提升之旅 ](javascript-base.md)
   - [ 读：你不知道的 Javascript 其一 ](javascript.md)
 * 部署
 
