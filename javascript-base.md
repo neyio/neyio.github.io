@@ -193,6 +193,77 @@ run(generatorExample, (res) => {
 
 ```
 
+
+## 异步控制流(其四)
+> AM 说: 可以手写 `async` `await`的词法去达到相似目的，下方代码可以手写一个babel的插件实现类似 `async` ,`await`
+```javascript
+new Promise((res,rej)=>{
+    try{
+      const gen =  asyncGen(...args,next);
+      gen.next();
+      function next(result){
+        if((typeof result === 'object' || typeof result === 'function') && (!!result.then && typeof result.then === 'function')){
+          //thenable 
+          result.then(value=>{
+            try{
+              const {done,value:newValue} = gen.next(value);
+              if(done) res(Promise.resolve(newValue));
+            }catch(e){//捕获gen内部同步方法产生的异常throwError
+              rej(e)
+            }
+          },error=>{
+            console.log('b');
+            try{
+              gen.throw(error)
+            }catch(e){//捕获gen内部产生的异常throwError（gen内部没有处理error）
+              rej(e);
+            }
+          });
+        }else{
+          Promise.resolve().then(()=>{
+            try{
+              const {done,value:newValue} = gen.next(result);
+              if(done) res(Promise.resolve(newValue));
+            }catch(e){//捕获gen内部产生的异常throwError
+              rej(e)
+            }
+          });
+        }
+      }
+    }catch(e){//捕获gen内部产生的异常throwError（第一次调用）
+      console.log('a');
+      rej(e);
+    }
+  })
+
+const throwError = ()=>{
+  throw new Error('hhhh')
+};
+const promiseError =()=> new Promise((res,rej)=>{
+  rej('h');
+})
+try{
+  run(function*(next){
+    try{
+      const c = yield next('c');
+      // const b = yield next(throwError());
+      const b = yield next(promiseError());
+      // throw new Error('hhhh');
+    }catch(error){
+      console.log('e');
+      throw error;
+    }
+    const a = yield next(1);
+    return 'hello wold';
+  }).then(ans=>console.log(ans),e=>{
+    console.log('c');
+  }) 
+}catch(e){
+  console.log('d');
+  console.log(e);
+}
+```
+
 ## 控制同时执行的并发任务数 
 
 ```javascript
@@ -242,4 +313,122 @@ const sum = pipeAsyncFunctions(
   console.log(await sum(5)); // 15 
 })();
 
+```
+
+
+## 函数式编程相关
+### 通过reduce手写pipline
+
+```javascript
+const pipline = (...fns) => (initial) => {
+	return fns.reduce((acc, current) => {
+		return current(acc);
+	}, initial);
+};
+
+const fns = [ (x) => x + 1, (x) => x * 2, (x) => x + 10 ];
+const ans = pipline(...fns)(2);
+console.log(ans);
+
+```
+
+### 通过reduce手写一个compose
+
+> 需求是：给定多个参数（每个参数均为箭头函数，且入参有且仅有一个，通过数组的reduce方法生产一个能够compose的函数）。
+
+即 `function compose(...functions){ ... }` => 逆向执行functions
+
+此处最大的疑问其实是如何做到这样的反向执行，或者说反向执行最大的难点，摸不清的地方在哪里。
+我自己的思考是从最后一个被执行的箭头函数开始反向推理，如果我要做到这样的结果必须满足一个条件，也就是形成一个`f1(...fn-2(fn-1 (fn(param))))`这样的调用结构，我们截取最后"两次"调用，会发现 acc (也就是previousValue，后续文章中我都会称其为累计值，命名为acc) 是一个可以执行的函数（**变更reduce函数的关键就在于如何组织acc**），`fn`位置的acc应当为 `(参数) => acc(fn(参数)))`,由此推断出下方片段
+```javascript 
+function compose(...functions){
+  return functions.reduce((acc,current)=>{
+    // return (参数)=> acc( fn(参数) ) 此处结构 为推导的结构。
+  },(...)=>{...});
+}
+```
+那么实际上我们仔细去推敲 `fn` ，发现 `fn`即为当前的function(即reduce第一个参数的函数中的参数current) ，那就直接变换为`(param)=> acc(current(param) ) `
+```javascript
+function compose(...functions){
+  return functions.reduce((acc,current)=>{
+    return (param)=> acc(current(param) );
+  },(...)=>{...});
+}
+```
+此处剩余最大的问题是`f1`的acc是什么（也就是初始迭代函数是什么）, 答案是 `(a) => (a)`,原样返回，此处不作解释，自己再体会一下。
+```javascript
+function compose(...fns){
+  return fns.reduce((acc,current)=>{
+    return (callback)=> acc(current(callback) ); //此处我习惯把 param 改为 callback，也就是 nextFunction的 返回值
+  },(a)=>a);
+}
+const funcs = [ (x) => x + 1, (x) => x * 3, (x) => x - 1 ]; // 当x=5时，结果应该等于 13
+const output = compose(...funcs);
+console.log(output(5));// 13
+```
+
+
+### 如何使用reduce写一个reduceRight函数
+
+> 此时我们会设想如果我要reduceRight，如何操作，一种方式是通过compose执行同一个方法实现，另外一种是重新写一个
+
+如果你不是一直以函数式编程编写的代码的coder，这段代码可能是很难以一时半会儿让你能够理解的。不要感觉灰心丧气，因为我每隔一段时间都很难快速推演出这个方法，难以理解的地方主要有三个
+1. (a)=>a 的初值。
+2. 究竟reduce过程函数返回值  `(acc) => preFnAcceleraterValue(fn(acc, current));  `在传递什么，是值还是方法，此处的`acc` 和 `preAcceleraterFn`的差别，备注：此处`preAcceleraterFn`是生成函数，`acc`是确切的值。
+3. 记住一点， 要形成逆序执行的最基本点 就是 `preAcceleraterFn` 要比 当前的运算后进行，反之就是说，当前的 `fn` 的运算结构要先于 `preAcceleraterFn`。
+
+```javascript
+const reduceRight = (arr, fn, initial) => {
+	return arr.reduce((preAcceleraterFn, current) => {
+		return (acc) => preAcceleraterFn(fn(acc, current)); 
+	}, (a) => a)(initial);
+};
+
+
+
+const p = reduceRight(
+	[ 1, 2, 3, 4, 5 ],
+	(acc, current) => {
+		console.log('TCL: acc, current', acc, current);
+		return `${acc}.${current}`;
+	},
+	6
+);
+
+console.log(p);
+
+```
+
+
+
+
+## ES6的特性试炼
+
+
+### 通过Proxy写一个Immer
+
+> TODO： 为了探究和了解部分原理，揣摩一波，才又本章节，当然关键还是因为 `redux`的`reducer`模版函数略显复杂，如果我们在对同一个结构进行拷贝创建新的对象时，只修改了部分`kv`，但是我们需要深层次结构的进行简化`redux`的`reducer`返回进行调整.详见 https://github.com/immerjs/immer 不敢献丑，简单的揭示Proxy的使用和实现。
+```javascript
+ const getKey = (...args)=> Reflect.get(...args);
+ const proxyImmer = (obj)=> new Proxy(
+	  	obj,
+		{
+			get(...args) {
+				if (!getKey(...args)) {
+					if (Reflect.set(target, key, proxyImmer({}), receiver)) {
+						return getKey(...args);
+					} else {
+						throw new Error('set key to object failed');
+					}
+				}
+				return value;
+			},
+			set(target, key, value, receiver) {
+				return Reflect.set(target, key, proxyImmer(value), receiver);
+			}
+    }
+  //...
+  const produce = (obj, fn) => {
+    return diff(obj,fn(proxyImmer(obj)));
+  };
 ```

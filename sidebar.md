@@ -4,7 +4,8 @@
   - [ 知识技能树 ](front-knowledge-tree.md)
 * JAVASCRIPT
   - [ 提升之旅 ](javascript-base.md)
-  - [ 读：你不知道的 Javascript 其一 ](javascript.md)
+  - [ ES6+速读 ](es.md)
+  - [ 读：你不知道的 Javascript（一） ](javascript.md)
 * 部署
 
   - [ Docker 基础 ](docker.md)
