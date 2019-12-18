@@ -395,7 +395,9 @@ console.log((arr = Array.from(set))); // [1，2，3]
 
 ## 14.对象
 
-先看一个知识点丰富的示例
+
+我们可以把ES的对象想象成一个`散列表`，先看一个知识点丰富的示例,然后再逐步精进把，大量的OO的知识会在下方逐步讲到。
+
 ```javascript
 const NAME = Symbol('name');
 const obj = {
@@ -425,6 +427,7 @@ Object.is('foo','foo');//true
 Object.is({},{});//false  {} === {} false
 Object.is(+0,-0);//false  但是 +0===-0 true
 ```
+
 ### 为对象添加默认值
 ```javascript
 const DEFUALTS = {
@@ -435,11 +438,314 @@ const DEFUALTS = {
 const getApiMap = (map = {})=>{
   return Object.assign({},DEFUALTS,map);
 }
-console.log(getApiMap({LOGIN:'/log-in'}));//{LOGIN: "/log-in", REGISTER: "/register"}
+console.log(getApiMap({LOGIN:'/log-in'}));// {LOGIN: "/log-in", REGISTER: "/register"}
 
 ```
 
+### 两种属性和操作
+
+对象具有两种属性，一种是数据属性，一种是访问器属性。
+
+#### 数据属性
+
+4个配置项 `[ 'value', 'writable', 'enumerable', 'configurable']  `
+
+```javascript
+const obj = { name:'neyio' };
+Object.getOwnPropertyDescriptor(obj,'name');
+// {value: "neyio", writable: true, enumerable: true, configurable: true}
+Object.defineProperty(obj,'getName',{
+  enumerable:true, // 是否可枚举，能否被 类似 for...in的遍历
+  value:function(){
+    return this.name;
+  },
+  configurable:true, // 是否可以删除或者修改属性，该属性一点变为false后，便无法再次将其变为true，直接锁死，一切想改变它的操作都是无效的。
+  writable:true // 是否可变更属性对应的值
+})
+console.log(obj.getName());//neyio
+Object.freeze(obj); // 冻结所有属性，防止修改
+obj.getName = function(){
+  return this.name+'foobar';
+} //修改无效
+console.log(obj.getName());//neyio
+```
+
+#### 访问器属性
+
+```javascript
+const obj = {_name:'neyio',modified:false};
+Object.defineProperty(obj,'name',{
+  get:function(){
+    return this._name;
+  },
+  set:function(val){
+    if(val!==this._name){
+      this._name = val;
+      this.modified = true;
+    }
+  },
+  configurable:true,//同上
+  enumerable:true,//同上
+});
+obj.name = 'foobar';
+console.log(obj.name);//foobar
+console.log(obj);// { _name: "foobar", modified: true }
+// Object.defineProperties 支持多个入参
+Object.getOwnPropertyDescriptor(obj,'name');// {enumerable: true, configurable: true, get: ƒ, set: ƒ}
+```
+
+### 属性遍历和读取
+
+常规的LHS时，对象先读取本身的属性，如果不能获得，则读取原型链的值。
+
+1. `for ...in` 不含不可枚举和Symbol，包含可枚举和继承的原型链属性
+2. `Object.keys()`  不含继承，不含Symbol，仅有可枚举属性
+3. `Object.getOwnPropertyNames()` 获取所有属性，仅不含Symbol
+4. `Object.getOwnPropertySymbols()` 获取所有Symbol 不含其他
+5. `Reflect.ownKeys()` 包含所有
+
+!> 注意： `Object.stringify(obj)`仅对自身可枚举的属性进行序列化
+
+在接下来的内容开始前，我不得不进行对基础的补充，否则这生涩的东西是在恶心。大多数程序员都有oop的经验，但是原型真的是个异类。
+
 ### 基础知识，原型补充
 > 此处不该提原型，但是我还是提了，毕竟面试了无数人（我挑人只是根据你的潜力和你的真诚），套路是上层建筑无所谓，底层（大部分机械面试官问的）呢？当然也不能理解成我对基础不重视，知晓和不知是两码事，会写原型和不会写原型是两码事，会不会面试答得出并不能获得多少印象分，只不过是短中拔长罢了，总有一天我也沦落于此。
+
+
+#### 创建对象的多个方式
+
+1. new操作符和工厂模式
+
+下面先理解下`new`，4个流程
+1. 创建一个对象，
+2. 将构造函数的作用域赋值给对象
+3. 执行构造函数代码
+4. 返回新对象
+
+```javascript
+function createObject(name, age) {
+	const o = new Object();
+	o.name = name;
+	o.age = age;
+	return o;
+}
+const obj = createObject('neyio', 18);
+console.log(obj); // {name:'neyio',age:18}
+
+const Person = function(name, age) {
+	this.name = name;
+	this.age = age;
+};
+const person = Object.create(Person.prototype);
+Person.call(person, 'neyio', 18);
+console.log(person); // { name:'neyio', age:18 }
+// 等价于
+const person2 = new Person('neyio', 18);
+console.log(person2); // { name:'neyio', age:18 } person3 instanceof Person true
+// 等价于
+const person3 = Object.create({});
+Person.call(person3, 'neyio', 18);
+console.log(person3); //此时只有数据，没有原型 { name:'neyio', age:18 } person3 instanceof Person false
+Object.setPrototypeOf(person3, Person.prototype);
+console.log(person3); // { name:'neyio', age:18 } person3 instanceof Person true
+
+console.log(Object.getPrototypeOf(person3)===Person.prototype) //true
+Object.setPrototypeOf(person3, Object.getPrototypeOf(person2));
+console.log(person3); // { name:'neyio', age:18 } person3 instanceof Person true
+```
+
+2. 原型模式
+  * 每一个对象（或者说函数，函数也是对象）都具备一个原型，无论是new操作符得到的还是，Object.create({})得到的。
+  * 在原型上增加东西，相当于拓展所有基于该原型对象作为原型的对象。存在风险。
+  * 每一个原型属性(prototype)都包含一个constructor执行构造方法。
+  * 创建一个对象，相当于把构造函数的原型对象给予新的对象的原型属性，并将函数的作用域赋给新对象（相当于this指向该对象），并执行构造函数的方法，并返回该对象。
+
+  * 原型链上请不要挂数组或者可以引用的修改值，
+
+```javascript
+
+  function Person(){
+    this.name = 'fresh bird neyio';//如果属性存在则覆盖原型链属性
+  }
+  Person.prototype.name = 'neyio';
+  Person.prototype._name = 'foobar';
+  Person.prototype.getName = function(){
+    return this.name;
+  }
+  const p1 = new Person();// Person {name: "fresh bird neyio"} p1._name// foobar
+  delete p1.name;
+  console.log(p1); // neyio
+  const p2 = new Person();// Person {name: "fresh bird neyio"} p1._name// foobar
+
+// - - - - - 
+
+  function Boy(){
+    this.name = 'shit';
+  }
+  // 一次性多个赋值
+  Boy.prototype={
+    name:'neyio',
+    getName:function(){
+      return this.name;
+    }
+  }
+
+```
+1. 寄生构造模式
+> 这种方式断开了原型联系
+```javascript
+const Person = function(...cards){
+  let _cards  =  [].concat(cards||[]);
+  _cards.getNumbers = function(){
+    return this;
+  }
+  return _cards;
+}
+const p1 = new Person(1,2,3);
+console.log(p1.getNumbers());//[1, 2, 3, getNumbers: ƒ] 特别不好
+```  
+
+4. 稳妥构造模式
+> 这种方式断开了原型联系
+```javascript
+const Person = function(name,age){
+  const obj = {name,age};
+  obj.getName = function(){
+    return this.name;
+  }
+  return obj;
+}
+const p1 = new Person('neyio',18);
+console.log(p1.getName(),p1);// neyio , {name: "neyio", age: 18, getName: ƒ}
+```  
+
+
+### 继承
+Javascript的继承实际上可以理解为原型链的继承。
+
+```javascript
+const Super = function(){
+  this.name = 'neyiobaba';
+}
+Super.prototype.getName = function(){
+  return this.name;
+}
+
+const Sub = function(){
+  this.age = 18;
+}
+Sub.prototype = new Super();//此处创建了一个新的对象，并将 name,getName属性全部也赋值给了Sub.prototype
+
+Sub.prototype.getAge = function(){
+  return this.age;
+}
+Sub.prototype.getParentName =  function(){
+  return this.getName();
+}
+const child = new Sub();
+console.log(child.getAge());//18
+console.log(child.getParentName());//neyiobaba
+console.log(child.getName());//neyiobaba
+child.name = 'neyio';
+console.log(child.getParentName());//neyio
+console.log(child.getName());//neyio
+console.log(child instanceof Super)//true
+console.log(child instanceof Sub)//true
+```
+
+### 确定变量是否为数组
+
+```javascript
+Array.prototype.isPrototypeOf([]);//true
+Array.prototype.isPrototypeOf({});//false
+Array.isArray([]);//true
+```
+
+#### 稍作修改，注意两者区别，应该是原型链比
+
+```javascript
+const Super = function(){
+  this.name = 'neyiobaba';
+}
+Super.prototype.getName = function(){
+  return this.name;
+}
+
+const Sub = function(){
+  this.age = 18;
+}
+Sub.prototype = Super.prototype;// 此时丢失了name属性,而且会使得父亲一旦发生，儿子同时也会发生变化
+
+Sub.prototype.getAge = function(){
+  return this.age;
+}
+Sub.prototype.getParentName =  function(){
+  return this.getName();
+}
+const child = new Sub();
+console.log(child.getAge());//18
+console.log(child.getParentName());//undefined
+console.log(child.getName());//undefined
+child.name = 'neyio';
+console.log(child.getParentName());//neyio
+console.log(child.getName());//neyio
+Super.prototype.getName = function(){
+  return this.name+' after modified';
+}
+console.log(child.getParentName());//neyio after modified
+console.log(child.getName());//neyio after modified
+```
+
+
+### 借用构造函数
+用来解决上述原型链上的引用影响,缺点就是 instanceof 无法 探测父类的实例
+```javascript
+const Super = function(name){
+  this.cards = [ 1, 2, 3, 4 ];
+  this.name = name; 
+}
+const p1 =  new Super('foobar');
+const Sub = function(name){
+  Super.call(this,name);// 原因就是使得 this被 Super执行，this上挂上cards的值
+}
+const p2 = new Sub('neyio');
+p2.cards.push(5);
+console.log(p1.cards);//[ 1, 2, 3, 4 ]
+console.log(p2.cards);//[ 1, 2, 3, 4 , 5 ]
+console.log(p1.name);//foobar
+console.log(p2.name);//neyio
+console.log(p2 instanceof Sub);//true
+console.log(p2 instanceof Super);//false
+```
+
+稍作修改
+
+```javascript
+const Super = function(name){
+  this.cards = [ 1, 2, 3, 4 ];
+  this.name = name; 
+}
+const p1 =  new Super('foobar');
+const Sub = function(name){
+  Super.call(this,name);// 原因就是使得 this被 Super执行，this上挂上cards的值
+}
+Sub.prototype = new Super();
+Sub.prototype.constructor = Sub;
+const p2 = new Sub('neyio');
+p2.cards.push(5);
+console.log(p1.cards);//[ 1, 2, 3, 4 ]
+console.log(p2.cards);//[ 1, 2, 3, 4 , 5 ]
+console.log(p1.name);//foobar
+console.log(p2.name);//neyio
+console.log(p2 instanceof Sub);//true
+console.log(p2 instanceof Super);//true
+```
+
+
+
+### 检查key是否存在
+
+1. `person.hasOwnProperty('name')`
+2. `'name' in person`
 
 
