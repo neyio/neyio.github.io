@@ -1,11 +1,12 @@
 - [ 自序 ](README.md)
 
-* 大前端程序员
-  - [ 知识技能树 ](front-knowledge-tree.md)
+
 * JAVASCRIPT
-  - [ 提升之旅 ](javascript-base.md)
   - [ ES6+速读 ](es.md)
+  - [ 提升之旅 ](javascript-base.md)
   - [ 读：你不知道的 Javascript（一） ](javascript.md)
+  - [函数式编程术语(摘)](functional.md) 
+  
 * 部署
 
   - [ Docker 基础 ](docker.md)
@@ -17,4 +18,7 @@
 
 - [ NODE 相关](node.md)
 
-- [ 规约 ](guideline.md)
+- [ 编程规约(改) ](guideline.md)
+
+* 大前端程序员
+  - [ 知识技能树 ](front-knowledge-tree.md)

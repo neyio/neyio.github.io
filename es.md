@@ -1,7 +1,7 @@
 # 速读ES6+
 > 本文仅对容易遗漏的知识点进行记录。
 
-### 1.暂时性死区
+## 1.暂时性死区
 
 查看以下代码
 ```javascript
@@ -33,7 +33,7 @@ demo3();
 ```
 
 
-### 2.变量提升的优先级
+## 2.变量提升的优先级
 
 可以理解为function的声明会被题升到AST的顶部，然后再执行其他定义
 
@@ -48,7 +48,7 @@ function demo(){
 demo();// 1
 ```
 
-### 3.for循环中的var和let差别
+## 3.for循环中的var和let差别
 
 ```javascript
 for(var i = 0;i<3;i++){
@@ -61,7 +61,7 @@ for(let i = 0;i<3;i++){
 }//012
 ```
 
-### 4.const的作用
+## 4.const的作用
 > const 只能保证引用地址的指针不变，而不能保证内部的值是否发生, 一般来说对象的比较是也就是地址的比较。
 
 ```javascript
@@ -71,9 +71,9 @@ b.name = 'neyio';//可以随意操作内部内容，往往同学 以为只有let
 console.log(a===b); // true
 ```
 
-### 5.解构的玩法
+## 5.解构的玩法
 
-#### 1.交换
+### 1.交换
 ```javascript
 let x ='foo';
 let y='bar';
@@ -82,7 +82,7 @@ console.log(x,y);//bar foo
 ```
 
 
-#### 2.默认值
+### 2.默认值
 
 > 解构给予默认值在 写函数的时候十分常见，请注意第三个`fn`的输出，了解解构的玩法 同时注意  深层解构会自动放弃路径前缀 
 ```javascript
@@ -107,10 +107,10 @@ let [a,b=a,c=b] = ['foo','bar'];
 console.log(a,b,c); // foo bar bar
 ```
 
-### 3.别名
+## 3.别名
 `let {a:name} = {a:'neyio}; //name is neyio`
 
-### 4.数组的对象方式解构
+## 4.数组的对象方式解构
 
 ```javascript
 const arr = [1,2,3]; 
@@ -120,20 +120,20 @@ const {length} = arr;
 //length is 3
 ```
 
-### 5.字符串解构
+## 5.字符串解构
 > 对字符串进行数组解构，可以得到这正的字符长度，防止特殊字符占用码点，直接使用str.length可能获取的字符串长度过长
 ```javascript
 const [...str]= "hello";
 console.log(str.length);//str is  ['h','e','l','l','o'];
 ```
 
-### 6.解构变量的toString 
+## 6.解构变量的toString 
 ```javascript
 const {toString}= 3;
 console.log(toString);//toString === Number.prototype.toString
 ```
 
-### 7.循环内解构类似Map的具备Iterator结构变量
+## 7.循环内解构类似Map的具备Iterator结构变量
 > 注意：遍历map能保证map的key设置的顺序
 ```javascript
 const map = new Map();
@@ -149,11 +149,11 @@ for(let [key,value] of map){
 
 
 
-### 8.字符码点问题
+## 8.字符码点问题
 > 一般是使用 codePointAt(pos)就行，js不能正确识别 unicode码点大于 0xFFFFF的字符，和charCodeAt()一样会以为是两个字符。
 此时 `for(let i = 0;i<str.length;i++) str[i]//不能正确遍历，而 for(let i of str) i 可以 `
 
-### 9.几个字符串函数
+## 9.几个字符串函数
 
 `includes,startsWith,endsWith,repeat,padStart,padEnd` 以及 字符串模板
 
@@ -174,7 +174,7 @@ const c = `支持换行
 
 ```
 
-### 10.tag模板函数
+## 10.tag模板函数
 
 ```javascript
 const tag = (strsArray,...values) => {
@@ -188,16 +188,258 @@ tag(['hello world ',' '],1,2);
 i18n`welcome to ${position}`;
 ```
 
-### 11.正则表达式
+## 11.正则表达式
 
 > 字符串对象具备4个方法,`match`,`replace`,`search`,`split`可以使用正则表达式。
 > TODO://此处需要找一天全部整理一次
 
-### 12.箭头函数
-1. 箭头函数内的this为定义时所在的对象，而不是使用时的对象。除非在箭头函数外层包裹一个函数，然后使用该函数的call｜apply|bind的方式进行修改父级作用域，this则依然保障指向被修改后的父级函数。
-2. 不能作为构造函数，不能使用new命令
-3. 不可以使用arguments，不存在的
-4. 不能使用yield 即不能成为generator函数
+## 12.函数
+
+### 箭头函数
+  1. 箭头函数内的this为定义时所在的对象，而不是使用时的对象。除非在箭头函数外层包裹一个函数，然后使用该函数的call｜apply|bind的方式进行修改父级作用域，this则依然保障指向被修改后的父级函数。
+  2. 不能作为构造函数，不能使用new命令
+  3. 不可以使用arguments，不存在的
+  4. 不能使用yield 即不能成为generator函数
+  5. 返回对象时不带return的情况下，表达式需要`()`包裹对象 `const a = () => ({foo:'bar'});`;
+  
+  ```javascript
+    const obj = {
+      name:'neyio',
+      getName:function(){
+        return ()=>{
+          return this.name;
+        };
+      }
+    }
+    const obj2 = { name:'foobar' };
+    obj.getName()(); //neyio;
+    obj.getName().call(obj2);// neyio;
+    obj.getName.call(obj2)();// foobar
+
+  ```
+### 函数属性name
+  1.  `function foo(){};foo.name // foo`; 
+  2. `es5`和`es6`差异
+    <!-- tabs:start -->
+    #### ** ES5 **
+    ```javascript
+      var f = function(){};
+      f.name //""     
+      var bar = function foo(){};
+      bar.name // foo注意了！
+    ```
+    #### ** ES6 **
+    ```javascript
+      const f = function(){};
+      f.name //"f"
+      const bar = function foo(){};
+      bar.name // foo;注意了！
+    ```
+    #### ** Bound **
+    ```javascript
+      const obj = {}
+      function foo(){}
+      foo.bind(obj);
+      foo.name //bound foo
+    ```
+    <!-- tabs:end -->
+
+###  bind,call,apply 的机操 
+!>  注意了：本质是在对方对象上生成一个Symbol作为key，把当前的this挂载到对方对象上的Symbol上作为值，在执行完毕后，删除该key。其他都是鬼扯。
+
+  1. bind 生成一个绑定了第一个参数作为this指向对象的方法
+  2. call 直接触发绑定了第一个参数作为this指向对象的方法，其余作为该方法的参数入参
+  3. apply 同call，只是参数仅有一个。
+
+
+
+  1. 实现一个bind函数
+
+  ```javascript
+    Function.prototype._bind = function(obj) {
+      var preThis = this;
+      var newFunction = function() {
+        return preThis.apply(obj, arguments); //注意arguments已经不被提倡使用了。
+      };
+      return newFunction;
+    };
+
+    const obj = {
+      name: 'neyio',
+      getName: function() {
+        return this.name;
+      }
+    };
+    const obj2 = { name: 'foobar' };
+    console.log(obj.getName._bind(obj2)()); //foobar
+  ```
+  
+  2. 实现一个call函数
+  ```javascript
+    const obj2 = { name: 'foobar' };
+    Function.prototype._call = function(...args) {
+      const preThis = this;
+      const [ obj, ...rest ] = args;
+      var newFunction = function() {
+        return preThis.call(obj, ...rest); //注意arguments已经不被提倡使用了。
+      };
+      return newFunction();
+    };
+
+    const obj3 = {
+      name: 'neyio',
+      getName: function(suffix) {
+        return this.name + suffix;
+      }
+    };
+    console.log(obj3.getName._call(obj2, 'neyio'));//foobarneyio
+  ```
+
+
+  3. 然后你发现一个事实，我在耍无赖，你用的都是`Function`的原型方法本身，并没有进行自己手动实现啊，你实现apply和call了吗？你怎么能调用呢？
+  > 我痛恨这种喊着这个方法不能用，但是你必须要实现，你要掌握这三个方法，而不能用这种其他方法的诡辩。 如果需要，也许你需要实现一台x86的系统，或者像我的法布里斯·贝拉（FabriceBellard)一样，那我默不作声。
+
+  ```javascript
+    const obj = {
+      name: 'neyio',
+      getName: function(suffix) {
+        return this.name + suffix;
+      }
+    };
+    Function.prototype._apply = function(obj, args) {
+      obj = obj || window;
+      const symbol = Symbol('function');
+      obj[symbol] = this;
+      const result = obj[symbol](args);
+      delete obj[symbol];
+      return result;
+    };
+    console.log(obj.getName._apply(obj2, [ 'neyio' ]));
+  ```
+
+?> 我最烦心的事情就是面试造🚀的装逼大佬，问他们这些问题我几乎不能确定他们会不会，然而他们一定还是会说我只是为了了解你的基本功，那么手写bind和call和apply好像也不难吧.
+  一来是你不能篡改系统方法，二来是这个时代在进步，能不操作原型链就不操作原型链，操作带来的后果远大于一时半会儿的实现，然而在函数式编程逐渐流行的年代，为如何拆分运算和分布式运算应该是更加值得关注的事情，而不是关心this是啥，当然关心一下也略有裨益，起码你可以在面试新人的时候装逼。
+
+
+### 递归传值实现1到100之和
+
 ```javascript
+const sum = (start, end, total = 0) => {
+	if (start > end) return total;
+	return sum(start + 1, end, total + start);
+};
+
+console.log(sum(1, 100));
+
 
 ```
+
+### 尾递归优化的斐波那契数列
+
+```javascript
+const fabonacci = (current, gen, a, b) => {
+	if (current > gen) return a;
+	return fabonacci(current + 1, gen, b, a + b);
+};
+
+// 112358 13 21;
+console.log(fabonacci(1, 1000, 1, 1));
+
+const fabonacci2 = (gen, a, b) => {
+	if (gen <= 0) return a;
+	return fabonacci2(gen - 1, b, a + b);
+};
+
+// 112358 13 21;
+console.log(fabonacci2(1000, 1, 1));
+
+```
+
+
+## 13.数组
+
+### 常用方法 forEach,map,reduce,reduceRight,find,findIndex
+> 使用reduce实现reduceRight是一个复杂的工艺，隔段时间尝试都需要时间理解，一直找不到是哪一门学科能让我了解这个更多。
+此处不再赘述
+
+### 好用方法
+```javascript
+
+Array.from({length:30}).map((_,i)=>i);//生成0到29数组。
+//等价于Array.from({length:30},(_,i)=>i);第二参数为类似map的方法
+Array.from({0:'neyio',1:'18',length:2});// ['neyio','18']; 必须为key的toString能转换为数字，必须含有长度length属性
+Array();// []
+Array(3);//[ empty * 3]
+Array(1,2,3);//[1,2,3]
+Array(10).fill(10);//生成一个长度为10，值均为10 的数组。
+// Array(10).fill(value,start,end) 不包括end
+Array.of(1,2,3);//转换值为数组 [1,2,3] 等价于 [1,2,3];一般可以解构实现
+Array.copyWithin(target,start,end = Array.length );//别看，无聊 
+[1,2,3,4,5].slice(-1);// 5
+[1,2,3,4,5].slice(1,-1);//2,3,4
+[1,2,3,4,5].slice(1,4);//2,3,4
+[1,2,3,4,5].includes(3);
+[1,2,3,4,5].filter(i => i>1);
+[1,2,3,4,5].some(x => x===1);
+```
+
+### 数组利用Set转换去除重复key
+
+```javascript
+let arr = [ 1, 1, 1, 2, 3 ];
+//利用 set去重
+const set = new Set(arr);
+console.log((arr = Array.from(set))); // [1，2，3]
+
+```
+
+## 14.对象
+
+先看一个知识点丰富的示例
+```javascript
+const NAME = Symbol('name');
+const obj = {
+  [NAME]:'neyio',
+  get name(){
+    return this[NAME] + 'foobar';
+  },
+  set name(val){
+    this[NAME] += val;
+  }
+}
+console.log(obj.name);//neyiofoobar
+obj.name = '1';
+console.log(obj.name);//neyio1foobar
+
+const obj2 = Object.assign(obj,name);
+console.log(obj.name);//neyio1foobar 
+
+const obj3 = Object.assign(obj,{name:'what?'});//先执行了set然后执行neyio1what?foobar
+console.log(obj3.name);//neyio1what?foobar
+
+const obj4 = Object.assign(obj,{[NAME]:'resetAgain'});// Symbol依然会被拷贝 等价于 obj4 = {...obj,[NAME]:'resetAgain'}; obj5 ={...obj4}；Symbol依然被解构进obj5了
+console.log(obj4.name);//resetAgainfoobar
+
+Object.is(NaN,NaN);//true  NaN===NaN false 唯一自反值
+Object.is('foo','foo');//true
+Object.is({},{});//false  {} === {} false
+Object.is(+0,-0);//false  但是 +0===-0 true
+```
+### 为对象添加默认值
+```javascript
+const DEFUALTS = {
+  LOGIN:'/login',
+  REGISTER:'/register',
+  //...
+}
+const getApiMap = (map = {})=>{
+  return Object.assign({},DEFUALTS,map);
+}
+console.log(getApiMap({LOGIN:'/log-in'}));//{LOGIN: "/log-in", REGISTER: "/register"}
+
+```
+
+### 基础知识，原型补充
+> 此处不该提原型，但是我还是提了，毕竟面试了无数人（我挑人只是根据你的潜力和你的真诚），套路是上层建筑无所谓，底层（大部分机械面试官问的）呢？当然也不能理解成我对基础不重视，知晓和不知是两码事，会写原型和不会写原型是两码事，会不会面试答得出并不能获得多少印象分，只不过是短中拔长罢了，总有一天我也沦落于此。
+
+
