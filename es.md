@@ -1447,4 +1447,58 @@ console.log('end'); // 同步方法
 
 ### 20. Iterator
 
-> 遍历器，把它想象成一个generator对象。
+> 遍历器，把它想象成一个generator对象。要适用于被·for ... of 循环调用
+```javascript
+function makeIterator(arr){
+  let index = 0;
+  return {
+    next:function(){
+      return index< arr.length? {
+        value:arr[index++],done:false
+      }:{
+        value:undefined,
+        done:true
+      }
+    }
+  }
+}
+const it = makeIterator([1,2,3]);
+it.next().value;//1
+it.next().value;//2
+it.next().value;//3
+
+```
+
+
+### Object默认Iterator接口
+
+```javascript
+const obj = {
+  [Symbol.iterator]:function(){
+    return {
+      next:function(){
+        return {
+          value:1,
+          done:true
+        }
+      }
+    }
+  }
+}
+
+
+```
+
+### Array [Symbol.iterator]
+
+```javascript
+let arr = ['a','b','c'];
+let it = arr[Symbol.iterator]();
+it.next().value;// a
+it.next().value;// b
+it.next().value;// c
+```
+
+
+## 20.Generator 见 提升部分详解
+
