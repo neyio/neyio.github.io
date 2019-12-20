@@ -1,4 +1,4 @@
-# 速读ES6+
+# 速读ES6+[自我整理]
 > 本文仅对容易遗漏的知识点进行记录。
 
 ## 1.暂时性死区
@@ -107,10 +107,10 @@ let [a,b=a,c=b] = ['foo','bar'];
 console.log(a,b,c); // foo bar bar
 ```
 
-## 3.别名
+### 3.别名
 `let {a:name} = {a:'neyio}; //name is neyio`
 
-## 4.数组的对象方式解构
+### 4.数组的对象方式解构
 
 ```javascript
 const arr = [1,2,3]; 
@@ -120,7 +120,7 @@ const {length} = arr;
 //length is 3
 ```
 
-## 5.字符串解构
+### 5.字符串解构
 > 对字符串进行数组解构，可以得到这正的字符长度，防止特殊字符占用码点，直接使用str.length可能获取的字符串长度过长
 ```javascript
 const [...str]= "hello";
@@ -195,7 +195,7 @@ i18n`welcome to ${position}`;
 
 ## 12.函数
 
-### 箭头函数
+### 1.箭头函数
   1. 箭头函数内的this为定义时所在的对象，而不是使用时的对象。除非在箭头函数外层包裹一个函数，然后使用该函数的call｜apply|bind的方式进行修改父级作用域，this则依然保障指向被修改后的父级函数。
   2. 不能作为构造函数，不能使用new命令
   3. 不可以使用arguments，不存在的
@@ -217,7 +217,7 @@ i18n`welcome to ${position}`;
     obj.getName.call(obj2)();// foobar
 
   ```
-### 函数属性name
+### 2.函数属性name
   1.  `function foo(){};foo.name // foo`; 
   2. `es5`和`es6`差异
     <!-- tabs:start -->
@@ -244,7 +244,7 @@ i18n`welcome to ${position}`;
     ```
     <!-- tabs:end -->
 
-###  bind,call,apply 的机操 
+### 3.bind,call,apply 的机操 
 !>  注意了：本质是在对方对象上生成一个Symbol作为key，把当前的this挂载到对方对象上的Symbol上作为值，在执行完毕后，删除该key。其他都是鬼扯。
 
   1. bind 生成一个绑定了第一个参数作为this指向对象的方法
@@ -321,7 +321,7 @@ i18n`welcome to ${position}`;
   一来是你不能篡改系统方法，二来是这个时代在进步，能不操作原型链就不操作原型链，操作带来的后果远大于一时半会儿的实现，然而在函数式编程逐渐流行的年代，为如何拆分运算和分布式运算应该是更加值得关注的事情，而不是关心this是啥，当然关心一下也略有裨益，起码你可以在面试新人的时候装逼。
 
 
-### 递归传值实现1到100之和
+### 4.递归传值实现1到100之和
 
 ```javascript
 const sum = (start, end, total = 0) => {
@@ -334,7 +334,7 @@ console.log(sum(1, 100));
 
 ```
 
-### 尾递归优化的斐波那契数列
+### 5.尾递归优化的斐波那契数列
 
 ```javascript
 const fabonacci = (current, gen, a, b) => {
@@ -358,11 +358,11 @@ console.log(fabonacci2(1000, 1, 1));
 
 ## 13.数组
 
-### 常用方法 forEach,map,reduce,reduceRight,find,findIndex
+### 1.常用方法 forEach,map,reduce,reduceRight,find,findIndex
 > 使用reduce实现reduceRight是一个复杂的工艺，隔段时间尝试都需要时间理解，一直找不到是哪一门学科能让我了解这个更多。
 此处不再赘述
 
-### 好用方法
+### 2.好用方法
 ```javascript
 
 Array.from({length:30}).map((_,i)=>i);//生成0到29数组。
@@ -383,7 +383,7 @@ Array.copyWithin(target,start,end = Array.length );//别看，无聊
 [1,2,3,4,5].some(x => x===1);
 ```
 
-### 数组利用Set转换去除重复key
+### 3.数组利用Set转换去除重复key
 
 ```javascript
 let arr = [ 1, 1, 1, 2, 3 ];
@@ -428,7 +428,7 @@ Object.is({},{});//false  {} === {} false
 Object.is(+0,-0);//false  但是 +0===-0 true
 ```
 
-### 为对象添加默认值
+### 1.为对象添加默认值
 ```javascript
 const DEFUALTS = {
   LOGIN:'/login',
@@ -442,11 +442,11 @@ console.log(getApiMap({LOGIN:'/log-in'}));// {LOGIN: "/log-in", REGISTER: "/regi
 
 ```
 
-### 两种属性和操作
+### 2.两种属性和操作
 
 对象具有两种属性，一种是数据属性，一种是访问器属性。
 
-#### 数据属性
+#### 3.数据属性
 
 4个配置项 `[ 'value', 'writable', 'enumerable', 'configurable']  `
 
@@ -470,7 +470,7 @@ obj.getName = function(){
 console.log(obj.getName());//neyio
 ```
 
-#### 访问器属性
+#### 4.访问器属性
 
 ```javascript
 const obj = {_name:'neyio',modified:false};
@@ -494,7 +494,7 @@ console.log(obj);// { _name: "foobar", modified: true }
 Object.getOwnPropertyDescriptor(obj,'name');// {enumerable: true, configurable: true, get: ƒ, set: ƒ}
 ```
 
-### 属性遍历和读取
+### 5.属性遍历和读取
 
 常规的LHS时，对象先读取本身的属性，如果不能获得，则读取原型链的值。
 
@@ -508,11 +508,11 @@ Object.getOwnPropertyDescriptor(obj,'name');// {enumerable: true, configurable: 
 
 在接下来的内容开始前，我不得不进行对基础的补充，否则这生涩的东西是在恶心。大多数程序员都有oop的经验，但是原型真的是个异类。
 
-### 基础知识，原型补充
+### 6.基础知识，原型补充
 > 此处不该提原型，但是我还是提了，毕竟面试了无数人（我挑人只是根据你的潜力和你的真诚），套路是上层建筑无所谓，底层（大部分机械面试官问的）呢？当然也不能理解成我对基础不重视，知晓和不知是两码事，会写原型和不会写原型是两码事，会不会面试答得出并不能获得多少印象分，只不过是短中拔长罢了，总有一天我也沦落于此。
 
 
-#### 创建对象的多个方式
+#### 1.创建对象的多个方式
 
 1. new操作符和工厂模式
 
@@ -565,7 +565,7 @@ console.log(person3); // { name:'neyio', age:18 } person3 instanceof Person true
 ```javascript
 
   function Person(){
-    this.name = 'fresh bird neyio';//如果属性存在则覆盖原型链属性
+    this.name = 'fresh bird neyio';//如果属性存在则覆盖原型链属性 //构造函数中的this，跟生成的新对象的地址是一致的，详见weakSet的时候的探索
   }
   Person.prototype.name = 'neyio';
   Person.prototype._name = 'foobar';
@@ -620,7 +620,7 @@ console.log(p1.getName(),p1);// neyio , {name: "neyio", age: 18, getName: ƒ}
 ```  
 
 
-### 继承
+### 7.继承
 Javascript的继承实际上可以理解为原型链的继承。
 
 ```javascript
@@ -653,7 +653,7 @@ console.log(child instanceof Super)//true
 console.log(child instanceof Sub)//true
 ```
 
-### 确定变量是否为数组
+### 8.确定变量是否为数组
 
 ```javascript
 Array.prototype.isPrototypeOf([]);//true
@@ -697,7 +697,7 @@ console.log(child.getName());//neyio after modified
 ```
 
 
-### 借用构造函数
+### 9.借用构造函数
 用来解决上述原型链上的引用影响,缺点就是 instanceof 无法 探测父类的实例
 ```javascript
 const Super = function(name){
@@ -743,9 +743,708 @@ console.log(p2 instanceof Super);//true
 
 
 
-### 检查key是否存在
+### 10.检查key是否存在
 
 1. `person.hasOwnProperty('name')`
 2. `'name' in person`
 
 
+## 15.Symbol 
+> Symbol方法的参数都是字符串，如果是其他值会调用拆箱toString。
+Symbol函数声生成一个唯一值，属性值不冲突，此时参数为一个描述字符串，该字符串不能作为key进行理解，如果使用`Symbol.keyFor(一个非.for函数生成的symbol对象)`，则产生的值为`undefined`。
+
+而`Symbol.for(key)`生成的值可以被复用,参数为类似散列表中的唯一key，你可以再次使用`Symbol.for(key)`获得原值，如何再次获得该key，可以通过
+`Symbol.keyFor(s)`获取。
+
+!> 注意了，`Symbol.for()`会在全局中注册一个变量，你可以在任意位置获得它，而 `Symbol()` 不会.
+
+```javascript
+const s = Symbol('neyio');
+typeof s; // "symbol";
+s.toString(); // "Symbol(neyio)";
+const sp = Symbol.for('neyio'); //全局的变量
+console.log(s === sp)// false 注意了！
+const sp2 = Symbol.for('neyio');
+console.log(sp2 === sp)//true
+
+// -----
+const sk = Symbol.for('neyio');//全局的变量
+console.log(Symbol.keyFor(sk));//neyio
+const obj = {name:'neyio'};
+const obj2 = {name:'foobar'};
+const sk2 = Symbol.for(obj);
+const sk3 = Symbol.for(obj2);
+console.log(Symbol.keyFor(sk2),Symbol.keyFor(sk3))// [object Object] 的字符串
+console.log(sk2===sk3);//true 注意，别这样用，
+
+// ---- 注意下方的示例
+const sk4 = Symbol.for(1);
+const sk5 = Symbol.for('1');
+console.log(sk4===sk5);//true
+
+```
+
+### 1.Symbol基本使用须知
+
+1. 基础使用
+`for...in` 和 `object.keys()`均无法遍历,但是解构和`Object.assign`依旧能继承。使用下方描述的获取遍历中的`Object.getOwnPropertySymbols`;
+
+```javascript
+const _uid = Symbol('s');
+const person = {
+  [_uid]:'xxxx'
+}
+const person2 = {...person};
+const person3 = Object.assign({},person);
+for(let key in person){
+  console.log(key); // 不执行
+}
+console.log(Object.keys(person));//[]
+console.log(person,person2,person3); // {Symbol(s): "xxxx"} * 3
+
+```
+
+
+2. 获取遍历
+  
+```javascript
+ Object.getOwnPropertySymbols();
+```
+
+
+### 2.常规使用
+
+1. 隐藏属性值（`for ... in` 和 `Object.keys()` 无法遍历的特性）
+2. 模块单例 //利用`Symbol.for`的全局性，依然 可以在操作过程中被修改，或者hack
+  
+  ```javascript 
+  //module.js
+  const MODULE_NAME = Symbol.for('neyio_module');
+  const g = window||global;
+  let module = null;
+  const ModuleConstructor = function(){
+    //...
+  }
+  if(!module){
+    module = new ModuleConstructor();
+  }
+  g[MODULE_NAME] = module;
+  export default g[MODULE_NAME];
+  ```
+  稍作修改  `const MODULE_NAME = Symbol.for('neyio_module')` 修改为 `const MODULE_NAME = Symbol('neyio_module')` ;外部将很难修改，除非导出 `MODUL_NAME`,再对`g[MODUL_NAME]`做修改,主要是利用了无法访问到这个属性的特性。
+
+3. 作为过渡的变量使用，用后删除，防止覆盖，接下看一个apply的实现
+  ```javascript
+  Function.prototype._apply = function(obj,...args){
+    obj = obj||window||global;
+    const symbolFn = Symbol('fn');
+    obj[symbolFn] = this;
+    const ans = obj[symbolFn](...args);
+    delete obj[symbolFn];
+    return ans;
+  }
+  const obj ={name:"neyio"};
+  const obj2 = {getName(suffix=''){return `${this.name}+${suffix}`;}};
+  obj2.getName._apply(obj,'suffix');//neyio+suffix
+  ```
+
+### 3.内置的11个Symbol
+
+只介绍一个吧`Symbol.hasInstance`
+   
+```javascript
+class MyClass {
+  [Symbol.hasInstance](foo){
+    return foo instanceof Array;
+  }
+}
+[1,2,3] instanceof MyClass
+
+```
+
+
+## 16.Set和Map
+
+### 1.Set用法和示例
+?> Set 是一种 key和value一致的数据结构，values，keys，返回结果相同entries返回一个两个相同数据的元组
+
+#### 1.数组和Set转换 
+> 不想用Set的退路，但是一定要拥抱时代变化，以及认清使用场景
+```javascript
+const arr =  Array.from(new Set([1,2,3]));
+const set = new Set(arr);
+console.log(arr);
+console.log(set);//Set(3) {1, 2, 3}
+const arr2 = [...set];
+console.log(arr2);// [1,2,3]
+```
+
+#### 2.基本使用方法
+
+```javascript
+const set = new Set([1,2,3]);
+set.add('neyio');
+for(let i of set){
+  console.log(i);
+}// 1，2，3，neyio
+for(let i in set){
+  console.log(i) ；//不会执行
+}
+
+```
+1. 获取长度 `[size]`
+2. 增加成员`[add]`
+3. 删除成员`[delete]`
+4. 判断成员`[has]`
+5. clear清空
+   
+```javascript
+const set = new Set([1,2,3]);
+set.add(2);
+console.log(set);// Set(3) {1, 2, 3}//保证了唯一性
+set.delete(2);
+console.log(set);// Set(2) {1, 3}//
+set.has(2);//false
+```
+
+#### 3.遍历`keys(),value(),entries(),forEach()`前两个方法返回的都是遍历器对象，结果一致，后两个几乎一致
+
+```javascript
+//forEach第二参数用于改变this绑定
+const set = new Set([1,2,3])
+set.forEach((value,key)=>{
+  console.log(value,key); 
+});
+// 1 1
+// 2 2
+// 3 3
+const obj = {
+  name:'neyio'
+}
+set.forEach((value,key)=>{
+  console.log(this);// window,注意不要使用箭头函数，否则无法变更this绑定
+},obj);
+
+set.forEach(function(value,key){
+  console.log(this);// {name: "neyio"}
+},obj);
+```
+
+#### 4.例子：数组去重
+
+```javascript
+const duplicateRemoval = (arr)=>{
+  return Array.from(new Set(arr));
+} 
+```
+
+
+#### 5.例子: 实现交\并\差集
+
+```javascript
+
+const union = (arr1,arr2)=>{
+  return Array.from(new Set([...arr1,...arr2]));
+} 
+union([1,2,3],[1,2,3,4]);// [1, 2, 3, 4]
+
+const intersect = (arr1,arr2)=>{
+  const set = new Set(arr2);
+  return arr1.filter(i=>set.has(i));
+}
+intersect([1,2,3],[2]);//[2]
+
+const difference = (arr1,arr2)=>{
+  const set = new Set(arr2);
+  return arr1.filter(i=>!set.has(i));
+}
+difference([1,2,3],[2]);//[1,3]
+
+```
+
+
+### 2.WeakSet用法和示例
+
+!> WeakSet 的 key 只能是 object(不含null)，不能是Symbol, WeakSet没有size，没有遍历器， 其余跟set用法相似，然而最大的差别是在于他的key指向的对象内存地址一旦被回收，不管weakSet是否还存在，一样都会被强制回收 。
+
+有且仅有三个方法 `add`,`has`,`delete`，访问 `size,forEach`均为`undifined`
+
+##### 探究this和构造函数生成的值是否相等
+```javascript
+const ws = new WeakSet([]);
+
+const Person = function(){
+  ws.add(this);
+  this.name  = 'neyio';//构造函数中的this，跟生成的新对象的地址是一致的
+}
+
+const a = new Person();
+ws.has(a);//true //构造函数中的this，跟生成的新对象的地址是一致的
+// ws.add(null);//报错
+//ws.add(Symbol('neyio'));//报错
+
+```
+
+### 3.Map基本用法
+
+!> Object的key只能是字符串，而实际上对象应该更倾向于hash键值对。
+#### 1.初始化
+```javascript
+cont m = new Map();
+const map = new Map([
+  ['key','value'],
+  [m,'Everything is ok!']
+])
+console.log(map);//Map(2) {"key" => "value", Map(0) => "anything is ok!"}
+console.log(map.get(m));//Everything is ok!
+
+```
+#### 2. 改(set)删(delete)查(get)及size
+
+```javascript
+const map = new Map([]);
+map.set('name','neyio');
+map.set('age','18');
+map.set('age','18');
+map.size;// 2
+const others  = {foo:"bar"};
+map.set(others,"foobar");
+const getName = function(){
+ return this.name; 
+}
+map.set(getName,'haha');
+map.get(getName);// haha
+map.get(others);// foobar
+
+map.has(others);// true
+
+map.delete(others);//true
+map.has(others);//false
+map.size;// 3
+map.clear();//清空hash表
+```
+
+#### 3.遍历
+
+1. keys 获取 key 迭代器
+2. values 获取 value 迭代器
+3. entries 获取 [key,value] 迭代器
+4. forEach 遍历方法，获取内容同上entries [key,value]
+```javascript
+const map = new Map([
+  ['k1','v1'],
+  ['k2','v2']
+]);
+const obj = {
+  name:'neyio',
+  getName:function(suffix=""){
+    return `${this.name}+${suffix}`;
+  }
+}
+map.forEach(function(value,key){
+  console.log(this.getName(value),this.name,key,value);
+  //不要使用箭头函数
+
+},obj);
+// neyio+v1 neyio k1 v1
+// neyio+v2 neyio k2 v2
+```
+
+
+#### 4.Set转化成Map
+
+> 等同于数组的转化
+```javascript
+const set = new Set([
+  ['k1','v1'],
+  ['k2','v2']
+])
+const map = new Map(set);
+console.log(map);
+console.log(map.get(k1),map.get(k2));
+```
+
+#### 5.WeakMap
+
+同weakSet的要求和使用方式
+
+!> 对dom操作不熟悉，本代码可能存在问题
+```javascript
+const wm = new WeakMap([]);
+const foo =  document.getElementById('foo');
+const bar =  document.getElementById('bar');
+wm.set(foo,'foo');
+wm.set(bar,'bar');
+document.removeChild(foo);
+document.removeChild(bar);
+
+```
+
+
+## 17.Proxy
+
+> 我知道这是一个好玩的东西，但是因为不求甚解，在实战项目中用的也很少，足以证明我是一个彩笔，但是今天的面试官动不动就说，你会Vue的代码把，那你实现一下MVVM（尤大笑晕在厕所），那你说下他是怎么实现的。原理你总知道把，知道，getter，setter...
+
+
+
+### Proxy和Reflect的用法简析
+
+> Proxy主要是用来修改某些操作的默认行为，从这个角度来讲，你可以把他理解成一个拦截器。想要访问对象，都要经过这层拦截。那么我们就可以在这层拦截上做各种操作了。比如你设置一个对象的值的时候，对对象的值进行校验等。
+> 注意这一句如果一个属性不可配置（configurable）和不可写（writable），则该属性不能被代理，通过 Proxy 对象访问该属性会报错。
+
+#### Proxy 支持的拦截操作一共 13 种：
+
+1. `get(target, propKey, receiver)`：拦截对象属性的读取，比如`proxy.foo`和`proxy['foo']`。如果一个属性不可配置（configurable）和不可写（writable），则该属性不能被代理，通过 Proxy 对象访问该属性会报错。
+2. `set(target, propKey, value, receiver)`：set方法的第四个参数receiver，总是返回this关键字所指向的那个对象，即proxy实例本身。代表拦截对象属性的设置，比如proxy.foo = v或proxy['foo'] = v，返回一个布尔值。
+3. `has(target, propKey)`：拦截`propKey in proxy`的操作，返回一个布尔值。值得注意的是，has方法拦截的是`HasProperty`操作，而不是`HasOwnProperty`操作，即has方法不判断一个属性是对象自身的属性，还是继承的属性。
+4. `deleteProperty(target, propKey)`：拦截`delete proxy[propKey]`的操作，返回一个布尔值。
+5. `ownKeys(target)`：拦截`Object.getOwnPropertyNames(proxy)`、`Object.getOwnPropertySymbols(proxy)`、`Object.keys(proxy)`，返回一个数组。该方法返回目标对象所有自身的属性的属性名，而`Object.keys()`的返回结果仅包括目标对象自身的可遍历属性。
+6. `getOwnPropertyDescriptor(target, propKey)`：拦截`Object.getOwnPropertyDescriptor(proxy, propKey)`，返回属性的描述对象。
+7. `defineProperty(target, propKey, propDesc)`：拦截`Object.defineProperty(proxy, propKey, propDesc）`、`Object.defineProperties(proxy, propDescs)`，返回一个布尔值。
+8. `preventExtensions(target)`：拦截`Object.preventExtensions(proxy)`，返回一个布尔值。
+9. `getPrototypeOf(target)`：拦截`Object.getPrototypeOf(proxy)`，返回一个对象。
+10. `isExtensible(target)`：拦截`Object.isExtensible(proxy)`，返回一个布尔值。这个方法有一个强限制，它的返回值必须与目标对象的isExtensible属性保持一致，否则就会抛出错误。
+11. `setPrototypeOf(target, proto)`：拦截`Object.setPrototypeOf(proxy, proto)`，返回一个布尔值。如果目标对象是函数，那么还有两种额外操作可以拦截。
+12. `apply(target, object, args)`：拦截 Proxy 实例作为函数调用的操作，比如`proxy(...args)、proxy.call(object, ...args)`、`proxy.apply(...)`。
+13. `construct(target, args)`：拦截 Proxy 实例作为构造函数调用的操作，比如`new proxy(...args)`。
+
+
+### 1. get方法 
+```javascript
+const person = {
+	name: 'neyio'
+};
+
+const proxy = new Proxy(person, {
+	get: function(target, property) {
+		if (property in target) {
+			// 等价于 target.hasOwnproperty(property)
+			return target[property];
+		} else {
+			throw new Error(`${property} does not exsist;`);
+		}
+	}
+});
+
+console.log(proxy.name); //neyio
+console.log(proxy.age); //Error: age does not exsist;
+
+
+```
+
+#### 稍作修改,验证get方法可以继承
+
+
+```javascript
+
+const person = {
+	name: 'neyio'
+};
+
+const proxy = new Proxy(person, {
+	get: function(target, property) {
+		if (property in target) {
+			return target[property];
+		} else {
+			throw new Error(`${property} does not exsist;`);
+		}
+	}
+});
+const person2 = Object.create(proxy);
+try {
+	//console.log(person2);//不要进行输出，否则会报 Cannot convert a Symbol value to a string
+	console.log(person2.age); //throw error 进行catch处理
+	console.log(person2.name); //继续执行 输出neyio
+} catch (e) {
+	console.log(e.message); // age does not exsist;
+}
+
+```
+
+#### 示例 拦截数组负数索引
+
+```javascript
+// ---- 拦截数组负数索引
+
+const createArray = (...arr) => {
+	const target = [ ...arr ];
+	const handler = {
+		get: function(target, property, receiver) {
+			let index = Number(property);
+			if (!Number.isInteger(index)) {
+				throw new Error('');
+			}
+			if (index < 0) {
+				index = target.length + index;
+			}
+			return Reflect.get(target, index, receiver);
+		}
+	};
+	return new Proxy(target, handler);
+};
+
+const arrProxy = createArray(1, 2, 3);
+console.log(arrProxy[1], arrProxy[-1]); //2 3
+```
+
+#### 示例 实现链式调用
+```javascript
+const actionsFns = {
+	double: (x) => x * 2,
+	plusOne: (x) => x + 1,
+	minusOne: (x) => x - 1
+};
+
+const pipProxy = (actions = actionsFns) => {
+	const fns = [];
+	const handler = {
+		get: function(target, property, receiver) {
+			if (property !== 'get') {
+				if (actions.hasOwnProperty(property)) {
+					fns.push(actions[property]);
+					return receiver;
+				} else {
+					throw new Error(`action function ${property} does not exsist!`);
+				}
+			} else {
+				return (initial) =>
+					fns.reduce((acc, current) => {
+						return current(acc);
+					}, initial);
+			}
+		}
+	};
+	return new Proxy(fns, handler);
+};
+
+const ans = pipProxy().plusOne.double.minusOne.get(1);
+console.log(ans); //3
+```
+
+#### 示例 实现快速Element创建
+
+```javascript
+// ---- 生成 _DOM 树
+
+const domCreator = () => {
+	const handler = {
+		get: function(target, property, receiver) {
+			return (attributes = {}, ...children) => {
+				const el = document.createElement(property);
+				Object.entries(attributes).map(([ key, value ]) => {
+					el.setAttribute(key, value);
+				});
+				children.map((child) => {
+					el.appendChild(typeof child === 'string' ? document.createTextNode(child) : child);
+				});
+				return el;
+			};
+		}
+	};
+	return new Proxy({}, handler);
+};
+const _DOM = domCreator();
+const domEl = _DOM.div(
+	{ style: `background:#000;color:#fff;z-index:10001;` },
+	_DOM.a({ href: 'http://neyio.cn' }, `neyio's site`),
+	_DOM.ul(
+		{},
+		_DOM.li({}, '这是第一行'),
+		_DOM.li({}, '这是第二行'),
+		_DOM.li({}, '这是第三行'),
+		_DOM.li({}, '这是第四行'),
+		_DOM.h1({}, '标题')
+	)
+);
+document.body.appendChild(domEl);
+```
+
+
+### 2. set验证数据 
+```javascript
+const Validator = () => {
+	const handler = {
+		set: function(target, key, value, receiver) {
+			if (key === 'name' && value !== 'neyio') {
+				throw new Error('name must be neyio');
+			}
+			target[key] = value;
+		}
+	};
+	return new Proxy({}, handler);
+};
+
+const user = Validator();
+try {
+	user.name = 'neyio';
+	console.log(user.name);
+	user.name = 'laoqian';
+} catch (e) {
+	console.log(e.message); //Error: name must be neyio
+}
+```
+### 3.apply包裹函数
+// 如果 target 是一个函数，调用 proxy包裹的target会被 handler的apply捕获
+// ctx是apply对象和call入参的第一参数，如果直接调用方法ctx为undefined
+
+```javascript
+const fnApply = (fn) => {
+	const handler = {
+		apply: function(target, ctx, args) {
+			console.log(ctx && ctx.name); //此处的ctx是apply对象和call触发的，如果直接调用方法ctx为undefined
+			return target(...args);
+		}
+	};
+	return new Proxy(fn, handler);
+};
+
+const wrappedFn = fnApply((a, b) => {
+	return a + b;
+});
+
+console.log(wrappedFn(1, 2)); // 3;
+
+const fnPerson = {
+	name: 'neyio'
+};
+
+const fnAns = wrappedFn.call(fnPerson, 1, 2);
+console.log('TCL: fnAns', fnAns);
+
+
+```
+### 4.has(target,property)
+
+>  判断key是否存在 
+> 
+```javascript
+//...
+const handler ={
+  has:function(target,key){
+    return key in target;
+  }
+}
+//...
+
+```
+
+### 5.construct拦截目标对象
+
+```javascript
+let _proxyConstructAddress = null;
+
+const constructProxy = new Proxy(function() {}, {
+	construct: function(target, args, newTarget) {
+		_proxyConstructAddress = newTarget; //等同于  constructProxy
+		target = { ...args };
+		target.name = 'neyio';
+		return target;
+	}
+});
+const _constructProxyDemo = new constructProxy(1, 2);
+console.log(_constructProxyDemo); //{ '0': 1, '1': 2, name: 'neyio' }
+console.log(_proxyConstructAddress === constructProxy); // 代理后的构造器的地址 true
+```
+
+### 6.可取消的实例 revocable
+
+```javascript
+// revocable
+
+let target = {
+	foo: 'bar'
+};
+let handler = {
+	get: function() {
+		return 'neyio';
+	}
+};
+let { proxy: proxyRevocable, revoke } = Proxy.revocable(target, handler);
+console.log('TCL: proxy.foo before', proxyRevocable.foo); //TCL: proxy.foo before neyio
+revoke();
+try {
+	console.log('TCL: proxy.foo end', proxyRevocable.foo); // Error:revoked. 结束代理后，拒绝访问目标对象
+} catch (e) {
+	console.log(e.message); // Cannot perform 'get' on a proxy that has been revoked
+```
+
+#### 7.其他用法
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/construct
+
+`defineProperty`,`deleteProperty`,`defineProperty`,`getOwnPropertyDescriptor`,`getPrototypeOf`,`isExtensible`,`ownKeys`,`preventExtensions`,`setPrototypeOf`
+
+!> 注意this指向
+
+
+## 18.Reflect
+
+自行查阅 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect
+
+
+## 19.Promise 
+
+
+> Promise的三种 状态  分别为 pending,fulfilled,rejected； Promise.all 和 Promise.race  前者所有resolve则resolve，后者第一个到达即resolve  Promise.resolve 生成Promise并触发resolve状态改变fulfilled，Promise.reject用于触发一个rejected状态转变
+
+```javascript
+
+const pm = new Promise(function(resolve, reject) {
+	setTimeout(() => {
+		resolve({ name: 'neyio' });
+	}, 3000);
+});
+pm.then((res) => {
+	console.log(res); // { name: 'neyio' } 第一次等3s
+});
+pm.then((res) => {
+	console.log(res); // { name: 'neyio' } 第二次微观队列直接操作
+});
+
+const setTimeoutWrapper = (fn, timeout, ...args) => {
+	return new Promise((resolve, reject) => {
+		setTimeout((...args) => resolve(fn(...args)), timeout, ...args);
+	});
+};
+
+const sum = (a, b) => a + b;
+setTimeoutWrapper(sum, 1000, 1, 2).then((res) => {
+	console.log(res); // 1秒后执行
+});
+
+// Promise 的 微观队列和宏观队列
+
+console.log('start'); // 同步方法  时序1
+
+setTimeout(() => {
+	console.log(1); // 宏观队列[0]  时序2
+});
+
+new Promise(function(resolve) {
+	console.log(2); // 同步方法 2
+	resolve(); // 微观队列[0]  时序3
+	console.log(3); //同步方法 4
+}).then(() => {
+	console.log(4);
+});
+
+Promise.resolve(true).then((res) => {
+	console.log(5); //微观队列[1] 时序4
+});
+
+setTimeout(() => {
+	console.log('6'); // 宏观队列[1]
+});
+setTimeout(() => {
+	console.log('7'); // 宏观队列[2]
+});
+console.log('end'); // 同步方法
+
+//start 2 3 end 4 5 1 6 7
+
+```
+
+
+### 20. Iterator
+
+> 遍历器，把它想象成一个generator对象。
