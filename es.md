@@ -848,6 +848,23 @@ console.log(person,person2,person3); // {Symbol(s): "xxxx"} * 3
   obj2.getName._apply(obj,'suffix');//neyio+suffix
   ```
 
+4. 作为Symbol作为私有key
+
+```javascript
+const foo = Symbol('foo');
+class Person{
+  constructor(){
+    this.name = 'neyio';
+  }
+  [foo](){
+    return this.name;
+  }
+  bar(){
+    return  this[foo]();
+  }
+}
+```
+   
 ### 3.内置的11个Symbol
 
 只介绍一个吧`Symbol.hasInstance`
@@ -1502,3 +1519,147 @@ it.next().value;// c
 
 ## 20.Generator 见 提升部分详解
 
+## 21.Class
+> 本文只介绍static 和super
+
+```javascript
+
+class Square extends Polygon {
+	constructor(length) {
+		// 在这里, 它调用了父类的构造函数, 并将 lengths 提供给 Polygon 的"width"和"height"
+		super(length, length);
+		// 注意: 在派生类中, 必须先调用 super() 才能使用 "this"。
+		// 忽略这个，将会导致一个引用错误。
+		this.name = 'Square';
+	}
+	get area() {
+		return this.height * this.width;
+	}
+	set area(value) {
+		// 注意：不可使用 this.area = value
+		// 否则会导致循环call setter方法导致爆栈
+		this._area = value;
+	}
+}
+
+// ----
+
+class Polygon {
+	constructor() {
+		this.name = 'Polygon';
+	}
+}
+
+class Square extends Polygon {
+	constructor() {
+		super();
+	}
+}
+
+class Rectangle {}
+
+Object.setPrototypeOf(Square.prototype, Rectangle.prototype); //这里，Square类的原型被改变，但是在正在创建一个新的正方形实例时，仍然调用前一个基类Polygon的构造函数。
+
+console.log(Object.getPrototypeOf(Square.prototype) === Polygon.prototype); //false
+console.log(Object.getPrototypeOf(Square.prototype) === Rectangle.prototype); //true
+
+let newInstance = new Square();
+console.log(newInstance.name); //Polygon
+
+// 静态方法
+
+class Tripple {
+	static tripple(n = 1) {
+		return n * 3;
+	}
+}
+
+class BiggerTripple extends Tripple {
+	static tripple(n) {
+		return super.tripple(n) * super.tripple(n);
+	}
+}
+
+console.log(Tripple.tripple()); // 3
+console.log(Tripple.tripple(6)); // 18
+
+let tp = new Tripple();
+
+console.log(BiggerTripple.tripple(3)); // 81（不会受父类实例化的影响）
+console.log(tp.tripple()); // 'tp.tripple 不是一个函数'.
+
+```
+
+## 22.Module
+
+> import 只能在模块顶层使用
+### 1.常规使用
+```javascript
+import { A ,B ,C} from 'module.js';
+export const A ;
+export { A };
+export { A as APro };
+export default any[ function , var, object ... ];
+
+import _,{ A , B ,C } from 'module.js';
+export { A , B} from 'module.js';
+
+export * from 'module.js';
+export * as moduleB from 'module.js';
+
+```
+
+### 2.import方法
+
+ES希望模块和模块组织结构尽可能是静态化，所以希望通过远端加载CDN地址的行为是不可取的，但是你可以在webpack中external某个模块，例如vue.js,然后再在index.html引入CDN，来优化性能。
+
+```javascript
+import('module.js').then(module=>{
+  ...
+})
+//可以直接远端引入
+import {A} from 'https://xxx.js' //未考证
+
+```
+
+
+### 3.加载规则
+
+```html
+<script type="module" scr="module.js"></script>
+等同于 
+<script type="module" scr="module.js" defer></script>
+```
+
+> 如果增加 async 标签，则当加载完成后，会阻塞渲染再立即执行脚本，然后再继续渲染。
+
+```html
+<script type="module" src="module.js" defer async></script>
+```
+
+ES 模块支持内嵌
+
+```html
+<script type="module">
+import moduleA from 'module.js';
+...
+</script>
+```
+
+
+### 4.ES模块导出的为值的引用
+> CommonJS导出的是值的复制
+
+#### 可以在此基础上构建单例
+
+```javascript
+let a = null;
+
+export default function(){
+  if(!a){
+    a = 'module inited';
+    return a;
+  }
+  return a;
+};
+```
